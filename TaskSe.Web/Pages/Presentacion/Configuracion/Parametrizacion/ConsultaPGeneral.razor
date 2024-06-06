@@ -1,0 +1,151 @@
+﻿@attribute [PageInfo(id_modulo = "15")]
+
+@page "/Presentacion/Configuracion/Parametrizacion/ConsultaParametroGeneral"
+@using TaskSe.Model.Models.Par;
+@using TaskSe.Services.Interfaces.Par;
+@using TaskSe.Web.Utilidades;
+
+
+@inject ILogger<ConsultaPGeneral> _logger
+@inject IParametroGeneralService _pGeneralService;
+
+<div class="row">
+    <div class="col-sm-6">
+        <div class="page-title-box">
+            <h4>Parámetros Generales:</h4>
+            <ol class="breadcrumb m-0">
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Configuración</a></li>
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Parametrización</a></li>
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Parámetros Generales</a></li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Parámetros Generales</h4>
+                <p class="card-title-desc"></p>
+
+                <button type="button" class="btn btn-primary waves-effect waves-light" @onclick="AgregarPGeneral">Agregar Parámetro General</button>
+                <br />
+                <br />
+
+                @if (_isLoading)
+                {
+                    <_Loading></_Loading>
+                }
+                else
+                {
+                    <RadzenDataGridApp @ref="grid"  AllowColumnResize="true" LogicalFilterOperator="LogicalFilterOperator.Or" AllowFiltering="true" AllowPaging="true" PageSize="10"  RowRender="@RowRender" ExpandMode="DataGridExpandMode.Single"
+                                   Data="@parametrosGenerales" TItem="ParametroGeneral">
+                        <Template Context="pGeneral">
+                            <RadzenCard Style="margin-bottom:20px">
+                                Parámetro General:
+                                <b>@pGeneral.nombre_parametro_general</b>
+                            </RadzenCard>
+                            <RadzenTabs>
+                                <Tabs>
+                                    <RadzenTabsItem Text="Parametros Detallados">
+                                        <RadzenDataGridApp AllowFiltering="true" AllowPaging="true"  Data="@pGeneral.listaParametrosDetallados" TItem="ParametroDetallado">
+                                            <Columns>
+                                                <RadzenDataGridColumn TItem="ParametroDetallado" Title="#" Sortable="false" Filterable="false" >
+                                                    <Template Context="data">
+                                                        @(pGeneral.listaParametrosDetallados.IndexOf(data) + 1)
+                                                    </Template>
+                                                </RadzenDataGridColumn>
+                                                <RadzenDataGridColumn TItem="ParametroDetallado" Property="nombre_parametro_detallado" Title="Nombre" />
+                                            </Columns>
+                                        </RadzenDataGridApp>
+                                    </RadzenTabsItem>
+
+                                </Tabs>
+                            </RadzenTabs>
+                        </Template>
+                        <Columns>
+                            <RadzenDataGridColumn TItem="ParametroGeneral" Width="40px" Property="" Title="" TextAlign="TextAlign.Center" Sortable="false">
+                                <Template Context="data">
+                                    <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="edit" Class="m-1" Click=@(() => EditarPGeneral(data.id_parametro_general)) Text="" />
+                                    <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="delete" Class="m-1" Click=@(() => EliminarPGeneral(data.id_parametro_general)) Text="" />
+                                </Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="ParametroGeneral" Property="nombre_parametro_general" Title="Nombre"></RadzenDataGridColumn>
+                        </Columns>
+                    </RadzenDataGridApp>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool _isLoading = true;
+
+    private RadzenDataGridApp<ParametroGeneral> grid;
+
+    private IEnumerable<ParametroGeneral> parametrosGenerales;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        try{
+            if(firstRender){
+                await ConsultarPGenerales();
+            }
+        }
+        catch(Exception exe){
+            _logger.LogError(exe, $"Error al consultar parámetros generales");
+            await _jsRuntime.SweetAlertUsual("Error","Error al consultar parámetros generales",TipoMensajeSweetAlert.error);
+        }
+    }
+
+    private async Task ConsultarPGenerales(){
+        _isLoading = true;
+        StateHasChanged();
+
+        parametrosGenerales = await _pGeneralService.consultarParametrosGenerales();
+
+        _isLoading = false;
+        StateHasChanged();
+    }
+
+    private async Task AgregarPGeneral()
+    {
+        _navigationManager.NavigateTo("/Presentacion/Configuracion/Parametrizacion/DetalleParametroGeneral");
+    }
+
+    private async Task EditarPGeneral(string id_parametro_general)
+    {
+        _navigationManager.NavigateTo($"/Presentacion/Configuracion/Parametrizacion/DetalleParametroGeneral/{id_parametro_general}");
+    }
+
+    private async Task EliminarPGeneral(string id_parametro_general)
+    {
+        try{
+            if(await _jsRuntime.SweetAlertConfirm("Eliminar parámetro general","¿Está seguro de eliminar el parámetro general?",TipoMensajeSweetAlert.question)){
+                
+                await _jsRuntime.SweetAlertLoading("Procesando", "Procesando solicitud");
+
+                if (await _pGeneralService.eliminarParametroGeneral(id_parametro_general))
+                {
+                    await _jsRuntime.SweetAlertConfirmSuccess("Correcto", "Proceso realizado correctamente", TipoMensajeSweetAlert.success);
+                    await ConsultarPGenerales();
+                }
+                else{
+                    await _jsRuntime.SweetAlertUsual("Error", "Error al eliminar el parámetro general", TipoMensajeSweetAlert.error);
+                }
+            }
+        }
+        catch(Exception exe){
+            _logger.LogError(exe, $"Error al eliminar parámetro general {id_parametro_general}");
+            await _jsRuntime.SweetAlertUsual("Error", "Error al eliminar el parámetro general", TipoMensajeSweetAlert.error);
+        }
+    }
+
+    void RowRender(RowRenderEventArgs<ParametroGeneral> args)
+    {
+        args.Expandable = true;
+    }
+}

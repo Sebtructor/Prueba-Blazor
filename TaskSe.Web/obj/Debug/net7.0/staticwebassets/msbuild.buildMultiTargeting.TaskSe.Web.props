@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\TaskSe.Web.props" />
+</Project>

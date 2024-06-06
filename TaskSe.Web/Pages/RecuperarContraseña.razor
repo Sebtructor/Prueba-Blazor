@@ -1,0 +1,101 @@
+﻿@layout LoginTemplate
+@page "/ReestablecerContraseña"
+@using TaskSe.Services.Interfaces.Configuracion.Perfilamiento
+
+@inject IUserService _userService
+@inject ILogger<RecuperarContraseña> _logger;
+
+<PageTitle>Recuperación de Contraseña | App Demo Blazor</PageTitle>
+
+@if (!_isLoading)
+{
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="wrap-login100 p-l-50 p-r-50 p-t-77 p-b-30">
+                <span class="login100-form-title p-b-55">
+                    Ingresa tu usuario
+                </span>
+                <div class="wrap-input100 validate-input m-b-16" data-validate="Valid email is required: ex@abc.xyz">
+                    <input class="input100" type="text" name="email" @bind-value="nombreUsuario" placeholder="Usuario">
+                    <span class="focus-input100"></span>
+                    <span class="symbol-input100">
+                        <span class="lnr lnr-envelope"></span>
+                    </span>
+                </div>
+
+                <div class="container-login100-form-btn p-t-25">
+                    <button class="login100-form-btn" type="button" @onclick="@RecuperacionContraseña">
+                        Continuar
+                    </button>
+                </div>
+                <div class="text-center w-full p-t-42 p-b-22">
+                    <a href="#" class="txt1" @onclick="@(() => _navigationManager.NavigateTo("/"))">Login</a>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <_Loading></_Loading>
+}
+
+@code {
+    bool _isLoading = true;
+
+    private string nombreUsuario = "";
+
+    private async void RecuperacionContraseña()
+    {
+        try {
+            if (string.IsNullOrEmpty(nombreUsuario))
+            {
+                await _jsRuntime.SweetAlertUsual("Error", "Debe diligenciar el usuario", TipoMensajeSweetAlert.error);
+                return;
+            }
+
+            await _jsRuntime.SweetAlertLoading("Procesando", "Procesando solicitud");
+
+            var remoteIpAddress = await _jsRuntime.GetIpAddress();
+
+            ResponseDTO respuesta = await _userService.gestionarSolicitudPass(nombreUsuario, remoteIpAddress);
+
+            if (respuesta.estado.Equals("OK"))
+            {
+                bool resultado = await _jsRuntime.SweetAlertConfirmSuccess("Correcto", "Hemos enviado un email al correo registrado para continuar con el proceso de recuperación de contraseña", TipoMensajeSweetAlert.success);
+
+                if (resultado)
+                {
+                    _navigationManager.NavigateTo("/");
+                }
+            }
+            else
+            {
+                await _jsRuntime.SweetAlertUsual("Error", respuesta.descripcion, TipoMensajeSweetAlert.error);
+                return;
+            }
+        }
+        catch (Exception exe){
+            _logger.LogError(exe,$"Error al generar solicitud de generación de contraseña para usuario {nombreUsuario}");
+        }
+    }
+
+
+    protected override async Task OnAfterRenderAsync(bool firsRender)
+    {
+        try
+        {
+            if (firsRender)
+            {
+                _isLoading = false;
+                StateHasChanged();
+            }
+        }
+        catch (Exception exe)
+        {
+
+        }
+    }
+}

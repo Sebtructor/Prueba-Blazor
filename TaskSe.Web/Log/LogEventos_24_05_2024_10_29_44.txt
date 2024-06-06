@@ -1,0 +1,14 @@
+2024-05-24 22:29:45.077 -05:00 [INF] Starting up the application
+2024-05-24 22:29:46.548 -05:00 [INF] The service has been started...
+2024-05-24 22:29:46.553 -05:00 [INF] La próxima ejecución del worker se realizará dentro de 9013447 milisegundos en la fecha 25/05/2024 1:00:00 a. m.
+2024-05-24 22:29:47.243 -05:00 [WRN] Failed to determine the https port for redirect.
+2024-05-24 22:30:49.921 -05:00 [INF] Se procesa desconexión bInf2Y-707GJf--VlO3u4_pPbPWuopYMZiIVV7_FLcg
+2024-05-24 22:32:55.248 -05:00 [INF] Se procesa desconexión hXceVJqXU7W4vc5qmJwsiFlZiKOjwjM1_D6Sv5I7jq8
+2024-05-24 22:32:59.647 -05:00 [INF] Se procesa desconexión E9KLDqQ4bb-2aqsBezhyIG5u3Rs5Gnu7LRZhkaeA-JY
+2024-05-24 22:33:12.455 -05:00 [INF] Se procesa desconexión xVoEhviwtzCP0eIgZ25fBzWiIdfnzhvaveEXd0M2Tj8
+2024-05-24 22:37:46.825 -05:00 [INF] Se procesa desconexión 0bWIUG66ytpJ_d_ZvslP6LEP_RcnoKl6z9DA8lShGn0
+2024-05-24 22:38:46.890 -05:00 [ERR] Error al cargar Login Template
+System.Threading.Tasks.TaskCanceledException: A task was canceled.
+   at Microsoft.JSInterop.JSRuntime.InvokeAsync[TValue](Int64 targetInstanceId, String identifier, Object[] args)
+   at Microsoft.JSInterop.JSRuntimeExtensions.InvokeVoidAsync(IJSRuntime jsRuntime, String identifier, Object[] args)
+   at TaskSe.Web.Shared.LoginTemplate.OnAfterRenderAsync(Boolean firsRender)

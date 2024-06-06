@@ -1,0 +1,4 @@
+2024-05-27 11:22:59.128 -05:00 [INF] Starting up the application
+2024-05-27 11:23:01.746 -05:00 [INF] The service has been started...
+2024-05-27 11:23:01.754 -05:00 [INF] La próxima ejecución del worker se realizará dentro de 49018246 milisegundos en la fecha 28/05/2024 12:59:59 a. m.
+2024-05-27 11:23:03.173 -05:00 [WRN] Failed to determine the https port for redirect.

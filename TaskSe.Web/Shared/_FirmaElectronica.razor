@@ -1,0 +1,862 @@
+﻿@layout FirmaElectronicaLayout
+
+@using TaskSe.Model.DTO
+@using TaskSe.Services.Interfaces.FirmaDigital
+
+@inject IFirmaDigitalService _firmaDigitalService
+@inject ILogger<_FirmaElectronica> _logger
+
+<div class="page-wrapper">
+        <div class="container" id="main_body">
+            <div id="flash_notice"></div>
+            <div id="wait-message" style="display:none">
+                <div class="message-block">
+                    <div class="fa-3x spinner-icon"><i class="fas fa-spinner fa-spin"></i></div>
+                    <div id="wait-text">Please, wait...</div>
+                </div>
+                <blockquote>
+                    <div id="quote-text">First we thought the PC was a calculator. Then we found out how to turn numbers
+                        into letters with ASCII — and we thought it was a typewriter. Then we discovered graphics, and
+                        we thought it was a television. With the World Wide Web, we’ve realized it’s a brochure.</div>
+                    <br><br><span class="author"><i id="quote-author">Douglas Adams (Author, scriptwriter, essayist,
+                            humorist, satirist and dramatist)</i></span>
+                </blockquote>
+            </div>
+            <div class="progress-bar-wrapper hidden">Uploading...<div id="progress-bar"><span class="bg-primary"></span>
+                </div>
+            </div>
+            <div class="panel panel-danger hidden" id="panel-error">
+                <div class="panel-body">
+                    <div class="margin-bottom-sm">You need to enable javascript in the browser to run this app. We are
+                        very sorry for this issue! Please contact us at <a
+                            href="mailto:pdfco@bytescout.zendesk.com?subject=PDF.co%20Error">pdfco@bytescout.zendesk.com</a>
+                        if you need help or assistance.</div>
+                    <ul id="error-list"></ul>
+                </div>
+            </div>
+            <div id="save-file-to-current-user" style="display:none"><input type="hidden" id="current-user"
+                    value="true"></div>
+            <div class="templates-block"></div>
+            <div id="created-from-id" class="hidden"></div>
+            <div id="created-from" class="hidden"></div>
+            <div id="referrer-data" class="hidden">
+                <div id="function_source"></div>
+                <div id="referrer-token"></div>
+                <div id="referrer-url"></div>
+            </div>
+            <div id="inputBox">
+                <div id="text-extractor" class="tab-pane fade active in" style="visibility:hidden">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><b>Sign PDF (by PDFLite.co)</b><br><small></small>
+                            </h3>
+                        </div>
+                        <div class="panel-body" >
+                            
+                            
+                            <div class="form-horizontal">
+                                <div class="additional-upload-buttons"><input id="inputFile" type="file"
+                                        class="custom-upload-btn" accept=".pdf,.jpg,.png,.jpeg" tabindex="-1"
+                                        style="position:absolute;clip:rect(0,0,0,0)">
+                                    <div class="bootstrap-filestyle input-group"><span class="group-span-filestyle"
+                                            tabindex="0"><label for="inputFile" class="btn btn-primary"><span
+                                                    style="margin-right:3px"
+                                                    class="icon-span-filestyle glyphicon glyphicon-folder-open"></span>
+                                                <span class="buttonText btn btn-primary">Choose file (PDF, JPG,
+                                                    PNG)..</span></label></span></div>
+                                </div>
+                                <p class="text-muted">drag and drop or select file(s)</p>
+                                <div class="upload-from-url-block collapse"><input id="inputUrl" type="text"
+                                        class="form-control text-center" placeholder="http://somesite.com/some-file"
+                                        accept=".pdf,.jpg,.png,.jpeg,.jfif,.doc,.docx,.ppt,.pptx,.rtf,.xls,.xlsx,.csv,.txt"><br><button
+                                        type="button" class="btn btn-primary btn-sm" id="proceed-url"><i
+                                            class="fa fa-icon fa-play"></i> Proceed</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row hidden cancel-selected-mode-wrapper">
+                <div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1"><a
+                        class="cancel-selected-mode block margin-bottom-sm">Back to mode selection</a></div>
+            </div>
+            
+            <div class="row margin-bottom hidden" id="document-title-wrapper">
+                <div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1"><label
+                        for="document-name">Document Title:</label> <input id="document-name" type="text" value=""
+                        class="form-control" placeholder="Enter the document name" style="z-index:1"></div>
+            </div>
+            <div id="choose-mode" class="margin-bottom hidden">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1">
+                        <div class="margin-bottom hidden">
+                            <div class="row">
+                                <div class="col-md-10"><strong>Who will sign this document?</strong></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-10 btn-toolbar btn-block"><button name="button" type="button"
+                                        class="btn btn-primary btn-lg" id="mode-sign-by-myself" disabled="disabled"><i
+                                            class="fa fa-user fa-1" aria-hidden="true"></i> Me only</button> <button
+                                        name="button" type="button" class="btn btn-lg btn-primary"
+                                        id="mode-sign-with-me-and-others" disabled="disabled"><i
+                                            class="fa fa-users fa-1" aria-hidden="true"></i> Me + others</button>
+                                    <button name="button" type="button" class="btn btn-lg btn-primary"
+                                        id="mode-sign-with-others-only" disabled="disabled"><i class="fa fa-users fa-1"
+                                            aria-hidden="true"></i> Others only</button> <button type="button"
+                                        class="btn btn-primary btn-sm hidden" id="fill-roles" disabled="disabled"><i
+                                            class="fa fa-users fa-1" aria-hidden="true"></i> Fill roles</button></div>
+                                -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row hidden modify-parties-wrapper">
+                <div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1"><a
+                        class="modify-parties block margin-bottom-sm">Modify parties</a></div>
+            </div>
+            <div class="row hidden" id="invite-list">
+                <div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1">
+                    <div class="editor-modal margin-bottom">
+                        <h4>Invite people to sign <a href="" class="close" data-dismiss="modal">×</a></h4>
+                        <div id="invitation-mode-selection"><br></div>
+                        <div class="emails">
+                            <div class="form-group role-input row example twitter-typeahead hidden">
+                                <div class="col-xs-12 margin-bottom-sm">
+                                    <div class="row">
+                                        <div class="col-xs-10">Role: <strong></strong></div>
+                                        <div class="col-xs-2"><a class="assign-me hidden pull-right">Me</a></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6"><input type="text" class="form-control name-input col-sm-6"
+                                        placeholder="Name" data-enter=" "
+                                        data-enter-focus="#invite-list .form-group:not(.example) .email-input"
+                                        data-backspace="#remove-email"
+                                        data-backspace-focus="#invite-list .form-group:not(example) .email-input"
+                                        data-auto-suggest="name"></div>
+                                <div class="col-md-6"><input type="text" class="form-control email-input col-sm-6"
+                                        placeholder="Email" data-enter="#new-email"
+                                        data-enter-focus="#invite-list .form-group:not(.example) .name-input"
+                                        data-auto-suggest="email"></div>
+                            </div>
+                            <div class="form-group new-input row example twitter-typeahead hidden">
+                                <div class="col-md-6"><input type="text" class="form-control name-input col-sm-6"
+                                        placeholder="Name" data-enter=" "
+                                        data-enter-focus="#invite-list .form-group:not(.example) .email-input"
+                                        data-auto-suggest="name"></div>
+                                <div class="col-md-6"><input type="text" class="form-control email-input col-sm-6"
+                                        placeholder="Email" data-enter="#new-email"
+                                        data-enter-focus="#invite-list .form-group:not(.example) .name-input"
+                                        data-auto-suggest="email"></div>
+                            </div>
+                        </div>
+                        <div class="overflow margin-bottom-sm"><button type="button" class="btn btn-primary btn-sm"
+                                id="new-email"><i class="fa fa-plus fa-1" aria-hidden="true"></i></button> <button
+                                type="button" class="btn btn-primary btn-sm" id="remove-email"><i
+                                    class="fa fa-minus fa-1" aria-hidden="true"></i></button></div>
+                        <div class="overflow margin-bottom-sm"><a href="javascript:void(0);" data-toggle="collapse"
+                                data-target="#email-additional" class="inline-block text-muted"><i
+                                    class="fa fa-plus fa-1 centered" aria-hidden="true"></i>Add invitation message</a>
+                            <div class="pull-right" id="confirm-parties"><a
+                                    class="cancel-selected-mode inline-block margin-left-sm">Cancelar</a> <button
+                                    type="button" class="btn btn-primary btn-sm inline-block margin-left-sm"
+                                    id="add-fields"><i class="fa fa-pencil-alt fa-1" aria-hidden="true"></i> Prepare and
+                                    assign fields</button> <button type="button"
+                                    class="btn btn-primary btn-sm pull-right margin-left-sm" id="send-without-fields"><i
+                                        class="fa fa-envelope-o fa-1" aria-hidden="true"></i> Save and send now</button>
+                                <img class="loading-pic inline-block hidden" src="assetsFirma\images\loading.gif" width="40"
+                                    height="30"></div><button type="button"
+                                class="btn btn-primary btn-sm inline-block pull-right hidden"
+                                id="confirm-modified-parties">Update</button>
+                        </div>
+                        <div id="email-additional" class="collapse">
+                            <div class="form-group row">
+                                <div class="col-md-12 margin-bottom-sm"><input type="text"
+                                        class="form-control subject-input col-sm-6"
+                                        placeholder="Invitation email subject" value="Please sign this document"></div>
+                                <div class="col-md-12"><textarea class="form-control message-input col-sm-6"
+                                        placeholder="Optional note to show in invitation emails">Please sign this document</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="pdfEditor" class="hidden">
+                <div class="modal fade" id="decline-document-modal" tabindex="-1" role="dialog"
+                    aria-labelledby="declineDocumentModal" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4><b>Caution</b></h4>
+                            </div>
+                            <div class="modal-body">
+                                <h4 id="decline-warning">Are you sure you want to decline? If you choose to continue
+                                    this document will be declined.</h4>
+                                <div id="decline-form" class="hidden"><input type="hidden" name="token"
+                                        id="decline-token" value="">
+                                    <div class="form-group"><label class="form-label" for="reason">Please provide a
+                                            reason for declining</label> <textarea name="reason" id="reason"
+                                            class="form-control" rows="5"></textarea></div>
+                                </div>
+                            </div>
+                            <div class="modal-footer"><a class="margin-right-sm cancel-modal">Cancelar</a> <a
+                                    id="continue-decline" class="btn btn-danger btn-ok">Yes, Decline</a> <a
+                                    id="proceed-decline" class="btn btn-danger btn-ok hidden">Proceed</a></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="predefined-images" style="display:none"><img data-predefined-name="predefined-checkmark"
+                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAMAAACahl6sAAAAq1BMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0NbREAAAAOHRSTlMABPwC+Av0JeIIHBUP1zHcysMr6ufupfC+s5eEU0Y7uK6ec2M3Es6SeGgg0l1YShl+qW5OP4mNivBj4WkAAARTSURBVHja7dyHctpAEIDhFUISIInei4ghFBdwd/b9nyyZtHFi+6xbVHaZ/R5C859u90AppZRSSimllFJKKaWUNI0unIWg1gvgDDT7iLUGiJcM8Ic4BOEWPv7UjkC0eRV/69RBsHUF/5o4INYKXxu6INQM/zUFkdwp/m8GAjlDfGsF4ngTfM8ahIk6+K7KHEQJt/iB6gIEacT4If8riBHU0GAgJuqbPTTqC4n6ZISfaImI+mMVPxVvgL1DBVNoe8DcJaYzZh71e0zrC+uof8b0LvhGvTtFGztgyrlHO3fAkrdEWw/AUNRBezfATrhFgsojMHPVQooBtxLu1pCiz62Dmz2kaF0BL08jpLi+BV6OVaTocCvgmwpSLLn17yWSfOFWv3skueDWvi9I8gK8uBdIsgde6l+Q5BJ48ZZIUTkAL5s2UlSPwMvtNVKMnoAXYu72msBLt48UNW4/S78OziR3faTYcpt+eCTmLrfZh3PJ3QckueeWiXdIMmX2g9TdIckz8OJo7p7oEEGGvHFZubvHjld67vrHTK5dlk7ZuZtkdO1y70ImAmruZnbtMpWdu6/Ooc/l5W7cyPTaZQ+nWpSVu+E20+/4nJq7mZ9DD2Xk7qSe/bVL5Vh87g6dPK5d/ASoZtTczefaZdQsNndnuZ1DewFx5pVklds5lLbCUZ/QMnGd27ULbYUjouVudZ7zOXQbgZWQmLuL3K5daCscjZg4BJDbOZS2whFQhwAKOYcOXYsVL4pWkPc51DLqE2ruFnYOneWZu+2wwHPoKr/cHXuFXrusLVa8CEMAeZxDiSscK2ruFn0OrS7yyN2dCydq+GjJTygzr2Z3pfwgHzUJuVvAwOgODaxWODxi7t4UPhNijvqoQ8vdR8iIY8gTi6gPt9TczUx9jLbaEZvcfc1ro61xnUnu/msTo62Jw3LmtdFCM3PUJ3xmXoM+2trBH0di7m4gB90B+ffTgdcQwFcfba14zrwuqmhrzXPmdV6xros5PCPJiws5Wtv3xZ+8YrYhtUIShvtRMyTIOndLiHpq7hbAHWLO/CcohDPBtJjPvFpEPUGtC4WJ0kU9k9w1CdNEPZvcNWnU8DNCZl4/jXpWuWvSNEa9pJnXxMc0BDwKYIh6km9AkGvUy5t5fT/qJa54rfAtmSteb6Ne6orXFDMwSqB07lBS7qaOetErXl4HTxKzeQ0r2uIv4le8wlhS7pqjXlLumgQ9JBlyW/GC5ugcVrxSRr2Qx2CP5hQW9BTsAT8k7CHYS6tM5PwM7B5T83k/AvtNUu4aXUjKXRP3XlLumjhLSbl7WtS3GeWuyeYajcasctfktoUGE24PXxlc1STlrkn3w6jfMcxd89CKpNw1eapKyl2Tx7dRX+GbuyY3onLX5EFU7prcsX7n1caO8TuvxEn0loDcTTOJHnN755U4tNLm9s4rcRJ9zOyvKDXq2b3zShSKyl2llFJKKaWUUkoppZQ6f98BnlorzOsipHQAAAAASUVORK5CYII=">
+                    <img data-predefined-name="predefined-crossmark"
+                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACABAMAAAAxEHz4AAAAJFBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACmWAJHAAAAC3RSTlMAwwxi9tyznXdBEkcQrlwAAAHaSURBVGjejM4xLkVRGEbRGwqJUqt5ZqA3AIkRSIxAtKag0ms0ChOQF0L+ySk3npd1d3fynZyzlnq63iyrOni47VCHMyfLqs5mzpfdLmbeNqsApzPbfwERBIjwCxBBgAg/AREMmAgBIhgQIUAEASLsACIIECFABAMiBIhgQIQAEQyIEICEABECVAQCIgSIYECEABEMiBAgAgERApgQIEIAEwLUNgAIAf4SnmdECLDb13I3IASo+lhuBoQAVe/L44AQoOqzoSIQMCf7FwD6BwQAsBmAkQCsBmAmQDsBvKAPSPT7JhiAOwKIIAAJAJjwcgyACJf3AIBQAERQAUAgAAQDQCAABANIMMAEA0wwwAQDTDDABAMiGACCASIYYIIBJhhgggEmGGCCASYYYEIA9zp7ulrWdTR7+ibNDm4AhmEYBq6s/V/agbdAgbaJLZHzB/Ar+Efk3+gHiY+yXya+zj5QeKT5UOWx7ouFV5svV17vHjA44njI4pjnQZOjrodtjvteOLjyeOni2ufFk6uvl2+u/w4gGIE4hGEM5CCKURjDOMaBDCQZiTKUZSzMYFrROMN51QMsKFSRsKRRTcSiSlUZyzrVhSwsVZmytFVtzOJa1XmV9x/m5D3FywcA2LVrcY+XRcsAAAAASUVORK5CYII=">
+                    <img data-predefined-name="predefined-radio"
+                        src="data:image/png;base64,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">
+                </div>
+                <div id="translated-strings" class="hidden">
+                    <div id="click-to-add-initials-translate"><span class="translation_missing"
+                            title="translation missing: en.elements.pdf_editor.click_to_add_initials">Click To Add
+                            Initials</span></div>
+                </div>
+                <div id="sign-modal" class="modal fade" tabindex="-1">
+                    <div class="modal-dialog modal-md">
+                        <div class="modal-content">
+                            <div class="editor-modal">
+                                <h4>Agregar Firma <a href="#" class="close" data-dismiss="modal">×</a></h4>
+
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a data-toggle="tab" href=".sign-tabs-1"
+                                            class="saved-tab">Guardadas</a></li>
+                                    <li ><a data-toggle="tab" href=".sign-tabs-0, .sign-tabs-canvas"
+                                            class="draw-tab">Dibujar</a></li>
+                                    <li ><a data-toggle="tab" href=".sign-tabs-3, .sign-tabs-canvas"
+                                            class="type-signature-button">Escribir</a></li>
+                                    <li ><a data-toggle="tab" href=".sign-tabs-2, .sign-tabs-canvas">Cargar desde Archivo</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content margin-bottom-sm margin-top-sm">
+                                    <div class="sign-tabs-1 tab-pane fade in active"><small class="text-muted">Haga click en la firma guardada para agregarla al documento o haga click en X para borrarla.</small>
+                                        <div class="saved-signatures"></div><small class="text-muted"></small>
+                                    </div>
+                                    <div class="sign-tabs-0 tab-pane fade"></div>
+                                    <div class="sign-tabs-2 tab-pane fade overflow"><label for="load-sign-file"
+                                            class="text-muted">Cargue imágenes PNG, JPG o GIF. El fondo se volverá transparente automáticamente.</label> <input type="file" id="load-file-sign"
+                                            class="btn btn-default upload-signature-file pull-left"
+                                            accept=".png,.jpg,.jpeg,.jfif,.gif"></div>
+                                    <div class="sign-tabs-3 tab-pane fade overflow"><button type="button"
+                                            class="btn btn-default icon-button pull-left margin-right-sm type-signature-plus">+</button>
+                                        <button type="button"
+                                            class="btn btn-default icon-button pull-left type-signature-minus">-</button>
+                                        <a class="btn btn-default change-type-signature-font margin-left pull-left">Cambiar Fuente</a>
+                                        <div class="pull-right margin-top-sm">Por favor escriba la firma</div>
+                                    </div>
+                                    <div class="sign-tabs-canvas tab-pane fade">
+                                        <div id="signature-wrapper"><canvas id="signature-canvas"
+                                                data-color="black">Your browser is not supported</canvas></div>
+                                        <div class="small-text text-muted"></div>
+                                    </div>
+                                </div>
+                                <div class="overflow"><a class="signature-clear pull-left">Limpiar</a>
+                                    <div class="color-pickers"><a href="" class="color-picker"
+                                            style="background:#000"></a> <a href="" class="color-picker"
+                                            style="background:red"></a> <a href="" class="color-picker"
+                                            style="background:#4169e1"></a></div><button type="button"
+                                        class="btn btn-primary btn-sm" id="sign-add" >Insertar Firma</button> <a
+                                        data-dismiss="modal" class="margin-right-sm pull-right cancel-modal">Cancelar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="field-sign-modal" class="modal fade" tabindex="-1">
+                    <div class="modal-dialog modal-md">
+                        <div class="modal-content">
+                            <div class="editor-modal">
+                                <h4>Agregar Firma <a href="" class="close" data-dismiss="modal">×</a></h4>
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a data-toggle="tab" href=".sign-tabs-1"
+                                            class="saved-tab">Saved</a></li>
+                                    <li><a data-toggle="tab" href=".sign-tabs-0, .sign-tabs-canvas"
+                                            class="draw-tab">Dibujar</a></li>
+                                    <li><a data-toggle="tab" href=".sign-tabs-2, .sign-tabs-canvas">Upload</a></li>
+                                    <li><a data-toggle="tab" href=".sign-tabs-3, .sign-tabs-canvas"
+                                            class="type-signature-button">Escribir</a></li>
+                                </ul>
+                                <div class="tab-content margin-bottom-sm margin-top-sm">
+                                    <div class="sign-tabs-1 tab-pane fade in active">
+                                        <div class="saved-signatures"></div>
+                                    </div>
+                                    <div class="sign-tabs-0 tab-pane fade"></div>
+                                    <div class="sign-tabs-2 tab-pane fade overflow"><input type="file"
+                                            class="btn btn-default upload-signature-file pull-left"
+                                            accept=".png,.jpg,.jpeg,.jfif"></div>
+                                    <div class="sign-tabs-3 tab-pane fade overflow"><button type="button"
+                                            class="btn btn-default icon-button pull-left margin-right-sm type-signature-plus">+</button>
+                                        <button type="button"
+                                            class="btn btn-default icon-button pull-left type-signature-minus">-</button>
+                                        <a class="btn btn-default change-type-signature-font margin-left pull-left">Change
+                                            font</a>
+                                        <div class="pull-right margin-top-sm">Please type the signature</div>
+                                    </div>
+                                    <div class="sign-tabs-canvas tab-pane fade">
+                                        <div id="field-signature-wrapper"><canvas id="field-signature-canvas"
+                                                data-color="black">Your browser is not supported</canvas></div>
+                                        <div class="small-text text-muted"></div>
+                                    </div>
+                                </div>
+                                <div class="overflow"><a class="signature-clear pull-left">Limpiar</a>
+                                    <div class="color-pickers"><a href="" class="color-picker"
+                                            style="background:#000"></a> <a href="" class="color-picker"
+                                            style="background:red"></a> <a href="" class="color-picker"
+                                            style="background:#4169e1"></a></div><button type="button"
+                                        class="btn btn-primary btn-sm pull-right" id="field-sign-add">Insertar Firma</button> <a data-dismiss="modal"
+                                        class="margin-right-sm pull-right cancel-modal">Cancelar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="roles-modal" class="modal fade" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="editor-modal">
+                                <h4>Manage roles <a href="" class="close" data-dismiss="modal">×</a></h4>
+                                <div class="roles-list">
+                                    <div class="form-group row example hidden">
+                                        <div class="col-md-12"><input type="text"
+                                                class="form-control name-input col-sm-6" placeholder="Role Name"
+                                                data-backspace="#remove-role"
+                                                data-backspace-focus="#roles-modal .form-group:not(.example) .name-input"
+                                                data-enter="#new-role"
+                                                data-enter-focus="#roles-modal .form-group:not(.example) .name-input">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-12"><input type="text"
+                                                class="form-control name-input col-sm-6" placeholder="Role Name"
+                                                data-backspace="#remove-role"
+                                                data-backspace-focus="#roles-modal .form-group:not(.example) .name-input"
+                                                data-enter="#new-role"
+                                                data-enter-focus="#roles-modal .form-group:not(.example) .name-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="overflow margin-bottom-sm"><button type="button"
+                                        class="btn btn-default btn-sm" id="new-role"><i class="fa fa-plus fa-1"
+                                            aria-hidden="true"></i></button> <button type="button"
+                                        class="btn btn-default btn-sm" id="remove-role"><i class="fa fa-minus fa-1"
+                                            aria-hidden="true"></i></button> <button type="button"
+                                        class="btn btn-primary btn-sm pull-right" id="save-roles">Save roles</button> <a
+                                        data-dismiss="modal" class="margin-right-sm pull-right cancel-modal">Cancelar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="assign-roles-modal" class="modal fade" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="editor-modal">
+                                <h4>Assign roles <a href="" class="close" data-dismiss="modal">×</a></h4>
+                                <div class="roles-list">
+                                    <div class="form-group form-horizontal row example hidden">
+                                        <div class="col-sm-3"><label class="role-name control-label"></label></div>
+                                        <div class="col-sm-4"><input type="text"
+                                                class="form-control email-input col-sm-6" placeholder="Email"></div>
+                                        <div class="col-sm-4"><input type="text"
+                                                class="form-control name-input col-sm-6" placeholder="Name"></div>
+                                        <div class="col-sm-1"><button type="button"
+                                                class="btn btn-default btn-sm assign-me">Me</button></div>
+                                    </div>
+                                </div>
+                                <div class="overflow margin-bottom-sm"><button type="button"
+                                        class="btn btn-primary btn-sm pull-right" id="assign-roles"
+                                        data-dismiss="modal">Save</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="label-modal-change" class="modal fade" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="editor-modal">
+                                <div id="text-labels">
+                                    <h4>Cambiar Texto <a href="" class="close" data-dismiss="modal">×</a></h4>
+                                    <div class="row">
+                                        <div class="col col-md-12"><a class="pull-right generate-date" title=""
+                                                data-tooltip="tooltip" data-original-title="Insert current date time"><i
+                                                    class="fa fa-calendar fa-2" aria-hidden="true"></i> Insertar fecha y hora actual</a></div>
+                                    </div>
+                                    <div class="sign-text-input-item"><textarea
+                                            class="form-control sign-text-input margin-bottom-sm"
+                                            placeholder="Type some text here" data-enter="#label-change"></textarea> <i
+                                            class="fa fa-pencil-alt fa-2 color-icon" aria-hidden="true"></i> <select
+                                            class="form-control font-family">
+                                            <option value="courier-new">Courier New</option>
+                                            <option value="helvetica">Helvetica</option>
+                                            <option value="times-new-roman">Times New Roman</option>
+                                        </select>
+                                        <div class="pull-left margin-left margin-top-sm"><label
+                                                for="label-transparency"><input type="checkbox" id="label-transparency"
+                                                    checked="checked"> Transparente</label></div>
+                                    </div>
+                                    <div class="overflow"><select class="form-control color">
+                                            <option value="#000000">Negro</option>
+                                            <option value="#ff0000">Rojo</option>
+                                            <option value="#0000ff">Azul</option>
+                                            <option value="#ffff00">Amarillo</option>
+                                            <option value="#ffffff">Blanco</option>
+                                        </select> <button type="button" class="btn btn-primary btn-sm"
+                                            id="label-change">Aplicar</button> <a data-dismiss="modal"
+                                            class="margin-right-sm pull-right cancel-modal">Cancelar</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center hidden" id="editor-converting">Converting document...</div>
+                <div class="text-center signature-loading" id="editor-loading"><i
+                        class="fa fa-spinner fa-spin fa-3x fa-fw"></i></div>
+                <div id="place-signature" style="display:none">
+                    <div id="parties-data"
+                        class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1 margin-bottom-sm hidden text-muted small">
+                    </div>
+                    <div id="agreement" class="row hidden margin-bottom">
+                        <div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td style="width:50%"><b>Need to confirm</b><br>I agree to be legally
+                                                    bound by this document and the PDF.co <a
+                                                        href="https://app.pdf.co/pages/terms">Terms of service</a>.
+                                                    Click on 'I Agree and Proceed' to sign this document.</td>
+                                                <td class="text-right"><a id="return-to-editing"
+                                                        class="margin-right inline-block">Return to edit</a> <a
+                                                        data-loading="manual" data-turbolinks="false"
+                                                        class="btn btn-danger btn-lg inline-block"
+                                                        id="agreement-confirm-button"
+                                                        href="https://app.pdf.co/sign-pdf#">I agree, Proceed</a><img
+                                                        class="loading-pic inline-block hidden"
+                                                        src="assetsFirma\images\loading.gif" width="40" height="30"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1">
+                            <h4 id="editor-header-text" class="margin-bottom hidden"><b>Sign PDF (by
+                                    PDFLite.co)</b><br><small></small></h4>
+                            <h4 id="fields-editor-header-text" class="margin-bottom hidden"><b>Click to Agregar Texto, use
+                                    toolbar to add fields, checkboxes, signature fields</b></h4>
+                            <div id="pdf-sign-preview-wrapper" class="text-center">
+                                <div id="prevent-editing" class="hidden"></div>
+                                <div id="pdf-preview-ifc-wrapper">
+                                    <div id="pdf-preview-ifc-body">
+                                        <div id="pdf-preview-ifc-content">
+                                            <div class="pdf-preview-ifc margin-bottom-sm hidden">
+                                                <div class="ifc-line clearfixed">
+                                                    <div class="editor-ifc hidden" id="fields-interface">
+                                                        <div class="interface-wrapper">
+                                                            <div class="dropdown pull-left"><button type="button"
+                                                                    class="btn btn-primary btn-sm dropdown-toggle"
+                                                                    id="auto-search-fields" data-toggle="dropdown"><i
+                                                                        class="fa fa-spinner fa-1 hidden"
+                                                                        aria-hidden="true"></i><i
+                                                                        class="fa fa-search fa-1"
+                                                                        aria-hidden="true"></i> <i
+                                                                        class="fa fa-caret-down fa-1"
+                                                                        aria-hidden="true"></i></button>
+                                                                <ul class="dropdown-menu">
+                                                                    <li><a id="detect-file-fields">Detect PDF form
+                                                                            fields</a></li>
+                                                                    <li><a id="detect-fields-visually">Detect fields
+                                                                            visually</a></li>
+                                                                    <li><a id="detect-checkbox-fields">Detect checkbox
+                                                                            fields</a></li>
+                                                                </ul>
+                                                            </div><button type="button"
+                                                                class="btn btn-primary btn-sm pull-left"
+                                                                id="add-signature-field" title="" data-tooltip="tooltip"
+                                                                data-placement="top"
+                                                                data-original-title="Signature field"><i
+                                                                    class="fa fa-edit fa-1" aria-hidden="true"></i>
+                                                                <span class="translation_missing"
+                                                                    title="translation missing: en.elements.pdf_editor.signature">Signature</span></button>
+                                                            <button type="button"
+                                                                class="btn btn-primary btn-sm pull-left"
+                                                                id="add-text-field" title="" data-tooltip="tooltip"
+                                                                data-placement="top" data-original-title="Text field"><i
+                                                                    class="fa fa-i-cursor fa-1" aria-hidden="true"></i>
+                                                                Text Field</button> <button type="button"
+                                                                class="btn btn-primary btn-sm pull-left"
+                                                                id="add-checkbox-field" title="" data-tooltip="tooltip"
+                                                                data-placement="top"
+                                                                data-original-title="Add Checkbox Field"><i
+                                                                    class="fa fa-check-square fa-1"
+                                                                    aria-hidden="true"></i> Checkbox</button> <button
+                                                                type="button" class="btn btn-primary btn-sm pull-left"
+                                                                id="add-date-field" title="" data-tooltip="tooltip"
+                                                                data-placement="top"
+                                                                data-original-title="Add Date Field"><i
+                                                                    class="fa fa-calendar fa-1" aria-hidden="true"></i>
+                                                                Date</button> <button type="button"
+                                                                class="btn btn-primary btn-sm pull-left"
+                                                                id="add-initials-field" title="" data-tooltip="tooltip"
+                                                                data-placement="top"
+                                                                data-original-title="Add Initials Field"><i
+                                                                    class="fa fa-edit fa-1" aria-hidden="true"></i>
+                                                                Initials</button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pull-left editor-ifc hidden" id="elements-interface">
+                                                        <button type="button" class="btn btn-primary btn-sm icon-button"
+                                                            id="sign-draw" data-toggle="modal" data-target="#sign-modal"
+                                                            title="" data-tooltip="tooltip" data-placement="top"
+                                                            data-original-title="Agregar Firma"><i
+                                                                class="fa fa-edit fa-1" aria-hidden="true"></i></button>
+                                                        <button type="button" class="btn btn-primary btn-sm icon-button"
+                                                            id="sign-label" title="" data-tooltip="tooltip"
+                                                            data-placement="top" data-original-title="Agregar Texto"><i
+                                                                class="fa fa-font fa-1" aria-hidden="true"></i></button>
+                                                        <button type="button" class="btn btn-primary btn-sm icon-button"
+                                                            id="upload-image" title="" data-tooltip="tooltip"
+                                                            data-placement="top" data-original-title="Agregar Imagen"><i
+                                                                class="fa fa-image fa-1"
+                                                                aria-hidden="true"></i></button> </div>
+                                                    <div class="pull-left editor-ifc hidden" id="roles-interface">
+                                                        <button type="button" class="btn btn-default btn-sm"
+                                                            id="manage-roles" data-toggle="modal"
+                                                            data-target="#roles-modal"><i class="fa fa-users fa-1"
+                                                                aria-hidden="true"></i> Roles</button></div>
+                                                    <div
+                                                        class="dropdown pull-right choose-proceed-type margin-left hidden">
+
+                                                        <button type="button" 
+                                                            class="btn btn-danger btn-sm margin-right-sm"
+                                                             id="confirm-button-without-certificate"
+                                                            data-loading="manual" title="" data-tooltip="tooltip"
+                                                            data-placement="top" data-original-title="Guardar.." ><i
+                                                                class="fa fa-save"></i> <img
+                                                                class="loading-pic hidden margin-right-sm"
+                                                                src="assetsFirma\images\loading.gif" width="40" height="30">
+                                                            Guardar..</button>
+                                                            <button type="button" hidden="hidden" id="btnGuardarDocumento" @onclick="FirmarDocumento"></button>
+                                                    </div>
+
+                                                    <div
+                                                        class="confirm-buttons button-expander pull-right margin-left hidden">
+                                                        <div class="dropdown pull-left"><a
+                                                                class="btn btn-default btn-sm dropdown-toggle"
+                                                                type="button" data-toggle="dropdown">More <span
+                                                                    class="caret"></span></a>
+                                                            <ul class="dropdown-menu">
+                                                                <li><a class="decline-document" data-tooltip="tooltip"
+                                                                        data-placement="bottom" data-turbolinks="false"
+                                                                        data-toggle="modal"
+                                                                        data-target="#decline-document-modal" title=""
+                                                                        href="https://app.pdf.co/sign-pdf#"
+                                                                        data-original-title="Decline..">Decline</a></li>
+                                                            </ul>
+                                                        </div><a data-loading="manual" data-turbolinks="false"
+                                                            class="btn btn-danger btn-sm pull-left margin-right"
+                                                            id="confirm-button"
+                                                            href="https://app.pdf.co/sign-pdf#">Finish</a><img
+                                                            class="loading-pic pull-right hidden"
+                                                            src="assetsFirma\images\loading.gif" width="40" height="30">
+                                                    </div>
+                                                    <div class="page-changing"><button type="button"
+                                                            class="btn btn-default btn-sm pdf-prev-page"
+                                                            data-tooltip="tooltip" data-placement="top"
+                                                            data-original-title="Previous Page"><i
+                                                                class="fa fa-long-arrow-alt-left fa-1"
+                                                                aria-hidden="true"></i></button> <input type="text"
+                                                            value="1" class="pdf-page"> <span
+                                                            class="total-pages"></span> <button type="button"
+                                                            class="btn btn-default btn-sm pdf-next-page"
+                                                            data-tooltip="tooltip" data-placement="top"
+                                                            data-original-title="Next Page"><i
+                                                                class="fa fa-long-arrow-alt-right fa-1"
+                                                                aria-hidden="true"></i></button></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="drag-image-on-canvas" style="display:none">
+                                    <div id="document-preview-caption" class="hidden">
+                                        <h1 class="alert-warning">
+                                            PREVIEW<br><br><br><br><br><br><br><br><br><br><br><br><br><br></h1>
+                                    </div>
+                                    <div class="sign-image-example">
+                                        <div class="sign-ifc"><button type="button"
+                                                class="btn btn-default btn-xs delete">×</button> <button type="button"
+                                                class="btn btn-default btn-xs sign-minus">-</button> <button
+                                                type="button" class="btn btn-default btn-xs sign-plus">+</button>
+                                            <button type="button" class="btn btn-default btn-xs copy-object"><i
+                                                    class="fa fa-copy fa-1" aria-hidden="true"></i></button></div><img
+                                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQYV2P4////fwAJ+wP9BUNFygAAAABJRU5ErkJggg=="
+                                            alt="">
+                                    </div>
+                                    <div class="sign-text-example">
+                                        <div class="sign-text-body">
+                                            <div class="sign-ifc"><button type="button"
+                                                    class="btn btn-default btn-xs delete">×</button> <button
+                                                    type="button"
+                                                    class="btn btn-default btn-xs sign-text-minus">-</button> <button
+                                                    type="button"
+                                                    class="btn btn-default btn-xs sign-text-plus">+</button> <button
+                                                    type="button" class="btn btn-default btn-xs copy-object"><i
+                                                        class="fa fa-copy fa-1" aria-hidden="true"></i></button> <button
+                                                    type="button" class="btn btn-default btn-xs edit-text-object"><i
+                                                        class="fa fa-cog fa-1" aria-hidden="true"></i></button></div>
+                                            <textarea></textarea>
+                                            <div class="disable-editing"></div>
+                                            <div class="sign-ifc-bottom">
+                                                <div class="btn btn-default btn-xs"><i class="fa fa-arrows-alt fa-1"
+                                                        aria-hidden="true"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="signature-field-created party-field example" data-type="signature">
+                                        <div class="signature-field-body field-body" style="height:96px;width:200px">
+                                            <div class="sign-ifc"><button type="button"
+                                                    class="btn btn-default btn-xs delete">×</button> <button
+                                                    type="button"
+                                                    class="btn btn-default btn-xs party-field-minus">-</button> <button
+                                                    type="button"
+                                                    class="btn btn-default btn-xs party-field-plus">+</button> <button
+                                                    type="button" class="btn btn-default btn-xs copy-object"><i
+                                                        class="fa fa-copy fa-1" aria-hidden="true"></i></button></div>
+                                            <div class="field-caption">Signature field</div>
+                                            <div class="field-ifc">
+                                                <div class="line">Signature by: <a
+                                                        class="pull-right manage-roles hidden" data-toggle="modal"
+                                                        data-target="#roles-modal">Manage roles</a> <select name=""
+                                                        id="" class="field-for">
+                                                        <option value="">Choose party</option>
+                                                    </select></div>
+                                                <div class="line">Hint To Show <input type="text"
+                                                        class="field-hint unedited"></div>
+                                                <div class="line">API: field id <input type="text"
+                                                        class="field-name unedited"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-field-created party-field example" data-type="text" data-lines="2">
+                                        <div class="text-field-body field-body">
+                                            <div class="sign-ifc"><button type="button"
+                                                    class="btn btn-default btn-xs delete">×</button> <button
+                                                    type="button"
+                                                    class="btn btn-default btn-xs party-field-minus">-</button> <button
+                                                    type="button"
+                                                    class="btn btn-default btn-xs party-field-plus">+</button> <button
+                                                    type="button" class="btn btn-default btn-xs copy-object"><i
+                                                        class="fa fa-copy fa-1" aria-hidden="true"></i></button></div>
+                                            <textarea readonly=""></textarea>
+                                            <div class="field-caption">Text field</div>
+                                            <div class="field-ifc">
+                                                <div class="line">Fill by: <a class="pull-right manage-roles hidden"
+                                                        data-toggle="modal" data-target="#roles-modal">Manage roles</a>
+                                                    <select name="" id="" class="field-for">
+                                                        <option value="">Choose party</option>
+                                                    </select></div>
+                                                <div class="line">Hint To Show <input type="text"
+                                                        class="field-hint unedited"></div>
+                                                <div class="line">API: field id <input type="text"
+                                                        class="field-name unedited"></div>
+                                                <div class="line"><label><input type="checkbox"
+                                                            class="field-transparency" checked="checked">
+                                                        Transparent</label></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="checkbox-field-created party-field example" data-type="checkbox"
+                                        data-state="unchecked">
+                                        <div class="checkbox-field-body field-body" style="height:40px;width:40px">
+                                            <div class="sign-ifc"><button type="button"
+                                                    class="btn btn-default btn-xs delete">×</button> <button
+                                                    type="button"
+                                                    class="btn btn-default btn-xs party-field-minus">-</button> <button
+                                                    type="button"
+                                                    class="btn btn-default btn-xs party-field-plus">+</button> <button
+                                                    type="button" class="btn btn-default btn-xs copy-object"><i
+                                                        class="fa fa-copy fa-1" aria-hidden="true"></i></button></div>
+                                            <div class="checkbox-field-image"></div>
+                                            <div class="field-caption">checkbox field</div>
+                                            <div class="field-ifc">
+                                                <div class="line">Fill by: <a class="pull-right manage-roles hidden"
+                                                        data-toggle="modal" data-target="#roles-modal">Manage roles</a>
+                                                    <select name="" id="" class="field-for">
+                                                        <option value="">Choose party</option>
+                                                    </select></div>
+                                                <div class="line">Field name (optional): <input type="text"
+                                                        class="field-name unedited"></div>
+                                                <div class="line">Field hint (optional): <input type="text"
+                                                        class="field-hint unedited"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-field-fillable field-fillable example">
+                                        <div class="field-fillable-body">
+                                            <div class="sign-ifc"><button type="button"
+                                                    class="btn btn-default btn-xs sign-minus">-</button> <button
+                                                    type="button" class="btn btn-default btn-xs sign-plus">+</button>
+                                            </div>
+                                            <div class="field-fillable-hint">Click to Agregar Texto</div>
+                                            <textarea></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="signature-field-fillable field-fillable example" data-toggle="modal"
+                                        data-target="#field-sign-modal">
+                                        <div class="field-fillable-hint">Click to Agregar Firma</div><img
+                                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQYV2P4////fwAJ+wP9BUNFygAAAABJRU5ErkJggg=="
+                                            alt="">
+                                    </div>
+                                    <div class="checkbox-field-fillable field-fillable filled example"
+                                        data-state="unchecked"></div><canvas id="pdf-sign-preview"></canvas><img
+                                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQYV2P4////fwAJ+wP9BUNFygAAAABJRU5ErkJggg=="
+                                        alt="" id="picture-preview">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="uploaded-image" class="hidden"><input type="file" accept=".png,.jpg,.jpeg,.jfif"></div>
+                <div id="signature-fonts-data" class="hidden">
+                    <div class="signature-font">Indie Flower</div>
+                    <div class="signature-font">Nothing You Could Do</div>
+                    <div class="signature-font">Dancing Script</div>
+                </div>
+            </div>
+            <div class="fixed-tips">
+                <div class="fixed-tip bg-success alert alert-secondary alert-dismissable small hidden"
+                    data-name="Copy object">
+                    <div class="row close">
+                        <div class="col-xs-12"><span type="button" class="close" data-dismiss="Copy object"
+                                aria-label="Close"><span aria-hidden="true">X</span></span> Consejo: mantenga [Shift] y click izquierdo del mouse para clonar el último objeto</div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default hidden" id="panel-result">
+                <div class="panel-body panel-result-body">
+                    <div class="text-center text-muted"><small>Here is your output file</small></div>
+                    <div id="result"></div>
+                    <div id="dropbox-save" class="text-center margin-bottom"></div>
+                    <div class="text-muted small text-center"><span>generated files are auto-removed within 1
+                            hour</span></div>
+                </div>
+                <div class="panel-body panel-result-preview">
+                    <hr>
+                    <div class="form-group">
+                        <div class="col-xs-12 text-center">
+                            <div class="text-center hidden" id="loading-icon"><i
+                                    class="fa fa-spinner fa-spin fa-3x fa-fw"></i></div><button type="button"
+                                class="btn btn-primary btn-lg" id="start-over"><i class="fa fa-icon fa-redo"></i> Start
+                                Over</button> <button type="button" class="btn btn-primary btn-lg hidden"
+                                id="start-over-same-file"><i class="fa fa-icon fa-redo"></i> Start over with the same
+                                file</button>
+                            <div id="preview-block">
+                                <h5 class="text-muted">Preview:</h5><a id="show-preview" data-toggle="collapse"
+                                    data-target="" class="hidden">Hide preview</a>
+                                <div id="preview"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade bs-example-modal-sm" id="waitDialog" tabindex="-1" role="dialog" aria-hidden="true"
+                data-backdrop="static">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Working, please wait...</h4>
+                        </div>
+                        <div class="modal-body"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><i
+                                class="fa fa-spin fa-3x fa-fw"></i><span>Working, please wait...</span></div>
+                    </div>
+                </div>
+            </div><input type="hidden" name="current_user_id" id="current_user_id" value="48546">
+        </div>
+    </div>
+
+@code {
+
+    [Parameter]
+    public FirmaElectronicaDTO firma { get; set; }
+
+    [Parameter]
+    public EventCallback eventoFirma { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        try
+        {
+            if (firstRender)
+            {
+                await _jsRuntime.InvokeVoidAsync("loadScript", "../assetsFirma/js/index_production.js");
+                await CargarArchivo();
+            }  
+        }
+        catch (Exception exe)
+        {
+            _logger.LogError(exe, $"Error al cargar archivo para firma electrónica");
+        }
+    }
+
+    private async Task CargarArchivo(){
+
+        if(firma == null){
+            await _jsRuntime.SweetAlertConfirmSuccess("Error", "No es posible encontrar este archivo", TipoMensajeSweetAlert.error);
+            return;
+        }
+
+        if (File.Exists(firma.ruta_original))
+        {
+            byte[] bytes = File.ReadAllBytes(firma.ruta_original);
+            string base64 = "data:application/pdf;base64," + Convert.ToBase64String(bytes);
+            await _jsRuntime.InvokeVoidAsync("FirmarDocumento",base64);
+        }
+        else
+        {
+            await _jsRuntime.SweetAlertConfirmSuccess("Error", "No es posible encontrar este archivo", TipoMensajeSweetAlert.error);
+        }
+    }
+
+    private async Task FirmarDocumento(){
+        try{
+            string documento = await _jsRuntime.InvokeAsync<string>("devolverDocumentoFirmado");
+
+            if(string.IsNullOrEmpty(documento)){
+                await _jsRuntime.SweetAlertUsual("Error","Ocurrió un error al firmar este documento",TipoMensajeSweetAlert.error);
+                return;
+            }
+
+            await _jsRuntime.SweetAlertLoading("Procesando", "Procesando solicitud");
+
+            documento = documento.Replace("data:application/pdf;base64,", "");
+            
+            if(string.IsNullOrEmpty(documento)){
+                await _jsRuntime.SweetAlertUsual("Error", "No se pudo generar el archivo firmado", TipoMensajeSweetAlert.error);
+                return;
+            }
+
+            if(!await _firmaDigitalService.guardarBase64FirmaElectronica(documento,firma.ruta_final,firma)){
+                await _jsRuntime.SweetAlertUsual("Error", "No se pudo generar el archivo firmado", TipoMensajeSweetAlert.error);
+                return;
+            }
+
+            firma.estado_firma = true;
+
+            await eventoFirma.InvokeAsync();
+
+        }
+        catch(Exception exe){
+             _logger.LogError(exe, $"Error al generar archivo firmado electrónicamente");
+        }
+    }
+}

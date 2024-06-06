@@ -1,0 +1,74 @@
+﻿@using TaskSe.Model.DTO
+@using TaskSe.Model.Models
+
+<div class="container d-flex justify-content-center align-items-center">
+        <div class="card text-center">
+            <div class="card-header p-5">
+                <img src="assetsOTP/mobile.png">
+                <h5 class="mb-2">VERIFICACIÓN OTP</h5>
+                <div>
+                @if (enviando_otp)
+                {
+                    <img src="/assetsOTP/loading_gif.gif" style="width:30px" />
+                    <small>Enviando mensajes...</small>
+                }
+                else
+                {
+                    <small>@mensaje</small>
+                }
+                
+                </div>
+            </div>
+            <div class="input-container d-flex flex-row justify-content-center mt-2 digit-group main">
+            <input type="number" class="m-1 text-center form-control rounded" oninput="maxLengthCheck(this);" id="digit-1" name="digit-1"
+                   data-next="digit-2" @bind="otp_code.C1">
+            <input type="number" class="m-1 text-center form-control rounded" oninput="maxLengthCheck(this);" id="digit-2" name="digit-2"
+                   data-next="digit-3" data-previous="digit-1" @bind="otp_code.C2">
+            <input type="number" class="m-1 text-center form-control rounded" oninput="maxLengthCheck(this);" id="digit-3" name="digit-3"
+                   data-next="digit-4" data-previous="digit-2" @bind="otp_code.C3">
+            <input type="number" class="m-1 text-center form-control rounded" oninput="maxLengthCheck(this);" id="digit-4" name="digit-4"
+                   data-next="digit-5" data-previous="digit-3" @bind="otp_code.C4">
+            <input type="number" class="m-1 text-center form-control rounded" oninput="maxLengthCheck(this);" id="digit-5" name="digit-5"
+                   data-next="digit-6" data-previous="digit-4" @bind="otp_code.C5">
+            <input type="number" class="m-1 text-center form-control rounded" oninput="maxLengthCheck(this);" id="digit-6" name="digit-6"
+                   data-previous="digit-5" @bind="otp_code.C6">
+
+            </div>
+            <div>
+                <small>
+                    @mensajeReenviar1
+
+                    <a href="javascript:void(0)" class="text-decoration-none" @onclick="eventoReenviarOTP">@mensajeReenviar2</a>
+                </small>
+            </div>
+            <div class="mt-3 mb-5">
+                <button type="button" disabled=@(!otp_enviado) class="btn btn-success px-4 verify-btn" @onclick="eventoVerificarOTP">Verificar</button>
+            </div>
+        </div>
+    </div>
+
+@code {
+    [Parameter]
+    public bool enviando_otp { get; set; } = true;
+
+    [Parameter]
+    public bool otp_enviado { get; set; } = false;
+
+    [Parameter]
+    public OTP_DTO otp_code { get; set; }
+
+    [Parameter]
+    public EventCallback eventoVerificarOTP { get; set; }
+
+    [Parameter]
+    public EventCallback eventoReenviarOTP { get; set; }
+
+    [Parameter]
+    public string mensaje { get; set; } = "El código ha sido enviado al e-mail y celular registrados";
+
+    [Parameter]
+    public string mensajeReenviar1 { get; set; } = "¿No recibiste el OTP?";
+
+    [Parameter]
+    public string mensajeReenviar2 { get; set; } = "Reenviar";
+}

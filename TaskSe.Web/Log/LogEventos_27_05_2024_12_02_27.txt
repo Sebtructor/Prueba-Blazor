@@ -1,0 +1,6 @@
+2024-05-27 00:02:28.513 -05:00 [INF] Starting up the application
+2024-05-27 00:02:38.309 -05:00 [INF] The service has been started...
+2024-05-27 00:02:38.315 -05:00 [INF] La próxima ejecución del worker se realizará dentro de 3441686 milisegundos en la fecha 27/05/2024 1:00:00 a. m.
+2024-05-27 00:02:40.203 -05:00 [WRN] Failed to determine the https port for redirect.
+2024-05-27 00:03:37.515 -05:00 [INF] Se procesa desconexión 84_V7xjpq4ECpHcprXpRyGL4dRWl0Vulsq9B7bJPmvQ
+2024-05-27 00:03:59.547 -05:00 [INF] Se procesa desconexión M6jyKJ8fy_DNoz81BqiQNaUu7mOIOklpKadEjL98mmc

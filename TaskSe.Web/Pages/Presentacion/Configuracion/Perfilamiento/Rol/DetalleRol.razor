@@ -1,0 +1,220 @@
+﻿@attribute [PageInfo(id_modulo = "4")]
+
+@page "/Presentacion/Configuracion/Perfilamiento/Rol/InsertarRol"
+@page "/Presentacion/Configuracion/Perfilamiento/Rol/ActualizarRol/{idRol}"
+
+
+@using TaskSe.Services.Interfaces.Configuracion.Perfilamiento
+@using TaskSe.Model.Models.Configuracion.Perfilamiento
+@using TaskSe.Model.Models
+
+
+@inject IRolService _rolService
+@inject IModuloService _moduloService
+@inject ILogger<DetalleRol> _logger
+
+
+<div class="row">
+    <div class="col-sm-6">
+        <div class="page-title-box">
+            <h4>Información Rol:</h4>
+            <ol class="breadcrumb m-0">
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Configuración</a></li>
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Perfilamiento</a></li>
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Roles</a></li>
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Detalle Rol</a></li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+@if (_isLoading)
+{
+    <_Loading></_Loading>
+}
+else
+{
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Información del Rol</h4>
+                    <p class="card-title-desc"></p>
+                    <EditForm class="login100-form validate-form" Model="rol" OnSubmit="InsertarRol">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" @bind-value="rol.nombre_rol" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Estado</label>
+
+
+                                    <RadzenDropDown AllowClear="false" TValue="string" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true" Class="form-control"
+                                                Placeholder="[Seleccionar]" @bind-value="rol.estado" Data=@estados TextProperty="descripcion" ValueProperty="id_estado" Change=@(args => OnChange(args, "DropDown with placeholder")) />
+
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" type="submit">Aceptar</button>
+                    </EditForm>
+                    
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Módulos</h4>
+                    <p class="card-title-desc"></p>
+
+                    <RadzenDataGridApp    @ref="grid" AllowRowSelectOnRowClick="@allowRowSelectOnRowClick" LogicalFilterOperator="LogicalFilterOperator.Or" AllowPaging="true" AllowFiltering="true" 
+                                PageSize="10" AllowColumnResize="true"  Data="@modulos" TItem="Modulo"  SelectionMode="DataGridSelectionMode.Multiple" @bind-Value=@selectedModulos>
+                        <Columns>
+                            <RadzenDataGridColumn TItem="Modulo" Width="40px" Sortable="false" Filterable="false">
+                                <HeaderTemplate>
+                                    <RadzenCheckBox TriState="false" TValue="bool" Value="@(modulos.Any(i => selectedModulos != null && selectedModulos.Contains(i)))"
+                                                Change="@(args => selectedModulos = args ? modulos.ToList() : null)" />
+                                </HeaderTemplate>
+                                <Template Context="data">
+                                    <RadzenCheckBox TriState="false" Value="@(selectedModulos != null && selectedModulos.Contains(data))"
+                                                TValue="bool" Change=@(args => { if(!allowRowSelectOnRowClick) { grid.SelectRow(data); }}) />
+                                </Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="Modulo" Property="nombre_modulo" Title="Nombre"></RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="Modulo" Property="tipo_modulo" Title="Tipo de Módulo"></RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="Modulo" Property="nivel" Title="Nivel"></RadzenDataGridColumn>
+
+                        </Columns>
+                    </RadzenDataGridApp>
+                    <br>
+                    <br>
+                    <center>
+                        <button class="btn btn-secondary" type="button" @onclick=@(() => _navigationManager.NavigateTo("/Presentacion/Configuracion/Perfilamiento/Rol/ConsultaRoles"))>Volver</button>
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>
+        }
+
+@code {
+
+    [Parameter]
+    public string idRol { get; set; } = string.Empty;
+
+    private bool _isLoading = true;
+
+    private IEnumerable<Modulo> modulos;
+    private Rol rol; 
+    private IEnumerable<Estado> estados = Estado.estados;
+
+    private IList<Modulo> selectedModulos;
+    private bool allowRowSelectOnRowClick = true;
+    private RadzenDataGridApp<Modulo> grid;
+
+    [CascadingParameter]
+    protected UserSession? userSession { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        try
+        {
+            if (firstRender)
+            {
+                await LoadData();
+                _isLoading = false;
+                StateHasChanged();
+            }
+        }
+        catch (Exception exe)
+        {
+            _logger.LogError(exe, $"Error al consultar información de rol {idRol}");
+            await _jsRuntime.SweetAlertUsual("Error", "Error interno del servidor", TipoMensajeSweetAlert.error);
+
+        }
+    }
+
+    private async Task LoadData(){
+        modulos = await _moduloService.getModulos();
+
+        if (!string.IsNullOrEmpty(idRol))
+        {
+            rol = await _rolService.getRol(idRol);
+            selectedModulos = modulos.Where(x => rol.modulos.Any(y => y.id_modulo == x.id_modulo)).ToList();
+        }
+        else
+        {
+            rol = new Rol();
+        }
+    }
+
+    private async void InsertarRol(){
+
+        try{
+
+            if (!await valData()) return;
+
+            await _jsRuntime.SweetAlertLoading("Procesando", "Procesando solicitud");
+
+            string usuario = userSession.UserName;
+
+            rol.modulos = selectedModulos;
+
+            var remoteIpAddress = await _jsRuntime.GetIpAddress();
+
+            if(await _rolService.insertarRol(rol,usuario,remoteIpAddress)){
+                bool resultado = await _jsRuntime.SweetAlertConfirmSuccess("Correcto", "Rol insertado correctamente", TipoMensajeSweetAlert.success);
+
+                if(resultado){
+                    _navigationManager.NavigateTo("/Presentacion/Configuracion/Perfilamiento/Rol/ConsultaRoles", forceLoad: true);
+                }
+            }
+            else{
+                await _jsRuntime.SweetAlertUsual("Error", "Ocurrió un error al insertar el rol", TipoMensajeSweetAlert.error);
+            }
+        }
+        catch(Exception exe){
+            _logger.LogError(exe, $"Error al guardar información de rol {rol.nombre_rol}");
+            await _jsRuntime.SweetAlertUsual("Error", "Error interno del servidor", TipoMensajeSweetAlert.error);
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task<bool> valData(){
+        if(string.IsNullOrEmpty(rol.nombre_rol)){
+            await _jsRuntime.SweetAlertUsual("Error", "Debe diligenciar un nombre para el rol", TipoMensajeSweetAlert.error);
+            return false;
+        }
+
+        if (string.IsNullOrEmpty(rol.estado))
+        {
+            await _jsRuntime.SweetAlertUsual("Error", "Debe seleccionar un estado para el rol", TipoMensajeSweetAlert.error);
+            return false;
+        }
+
+        if (selectedModulos == null)
+        {
+            await _jsRuntime.SweetAlertUsual("Error", "Debe seleccionar algún módulo", TipoMensajeSweetAlert.error);
+            return false;
+        }
+
+        return true;
+
+    }
+
+    void OnChange(object value, string name)
+    {
+        var str = value is IEnumerable<object> ? string.Join(", ", (IEnumerable<object>)value) : value;
+
+        //console.Log($"{name} value changed to {str}");
+    }
+}

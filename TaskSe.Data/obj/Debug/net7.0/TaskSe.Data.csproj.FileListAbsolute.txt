@@ -1,0 +1,15 @@
+C:\Users\USUARIO\Downloads\Blazor\demoblazor\CapacitacionBlazor\TaskSe.Data\bin\Debug\net7.0\TaskSe.Data.deps.json
+C:\Users\USUARIO\Downloads\Blazor\demoblazor\CapacitacionBlazor\TaskSe.Data\bin\Debug\net7.0\TaskSe.Data.dll
+C:\Users\USUARIO\Downloads\Blazor\demoblazor\CapacitacionBlazor\TaskSe.Data\bin\Debug\net7.0\TaskSe.Data.pdb
+C:\Users\USUARIO\Downloads\Blazor\demoblazor\CapacitacionBlazor\TaskSe.Data\bin\Debug\net7.0\TaskSe.Model.dll
+C:\Users\USUARIO\Downloads\Blazor\demoblazor\CapacitacionBlazor\TaskSe.Data\bin\Debug\net7.0\TaskSe.Model.pdb
+C:\Users\USUARIO\Downloads\Blazor\demoblazor\CapacitacionBlazor\TaskSe.Data\obj\Debug\net7.0\TaskSe.Data.csproj.AssemblyReference.cache
+C:\Users\USUARIO\Downloads\Blazor\demoblazor\CapacitacionBlazor\TaskSe.Data\obj\Debug\net7.0\TaskSe.Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\USUARIO\Downloads\Blazor\demoblazor\CapacitacionBlazor\TaskSe.Data\obj\Debug\net7.0\TaskSe.Data.AssemblyInfoInputs.cache
+C:\Users\USUARIO\Downloads\Blazor\demoblazor\CapacitacionBlazor\TaskSe.Data\obj\Debug\net7.0\TaskSe.Data.AssemblyInfo.cs
+C:\Users\USUARIO\Downloads\Blazor\demoblazor\CapacitacionBlazor\TaskSe.Data\obj\Debug\net7.0\TaskSe.Data.csproj.CoreCompileInputs.cache
+C:\Users\USUARIO\Downloads\Blazor\demoblazor\CapacitacionBlazor\TaskSe.Data\obj\Debug\net7.0\TaskSe.D.6AC3BD92.Up2Date
+C:\Users\USUARIO\Downloads\Blazor\demoblazor\CapacitacionBlazor\TaskSe.Data\obj\Debug\net7.0\TaskSe.Data.dll
+C:\Users\USUARIO\Downloads\Blazor\demoblazor\CapacitacionBlazor\TaskSe.Data\obj\Debug\net7.0\refint\TaskSe.Data.dll
+C:\Users\USUARIO\Downloads\Blazor\demoblazor\CapacitacionBlazor\TaskSe.Data\obj\Debug\net7.0\TaskSe.Data.pdb
+C:\Users\USUARIO\Downloads\Blazor\demoblazor\CapacitacionBlazor\TaskSe.Data\obj\Debug\net7.0\ref\TaskSe.Data.dll

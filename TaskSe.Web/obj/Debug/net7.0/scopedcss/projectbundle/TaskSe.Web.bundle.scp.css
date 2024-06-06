@@ -1,0 +1,78 @@
+/* _content/TaskSe.Web/Shared/MainLayout.razor.rz.scp.css */
+/* _content/TaskSe.Web/Shared/NavMenu.razor.rz.scp.css */
+/* _content/TaskSe.Web/Shared/_Page403.razor.rz.scp.css */
+
+*[b-egzxxjdcui], *[b-egzxxjdcui]:before, *[b-egzxxjdcui]:after {
+    box-sizing: border-box;
+}
+
+html[b-egzxxjdcui] {
+    height: 100%;
+}
+
+body[b-egzxxjdcui] {
+    font-family: 'Raleway', sans-serif;
+    background-color: #342643;
+    height: 100%;
+    padding: 10px;
+}
+
+a[b-egzxxjdcui] {
+    color: #EE4B5E !important;
+    text-decoration: none;
+}
+
+    a:hover[b-egzxxjdcui] {
+        color: #FFFFFF !important;
+        text-decoration: none;
+    }
+
+.text-wrapper[b-egzxxjdcui] {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.title[b-egzxxjdcui] {
+    font-size: 5em;
+    font-weight: 700;
+    color: #EE4B5E;
+}
+
+.subtitle[b-egzxxjdcui] {
+    font-size: 40px;
+    font-weight: 700;
+    color: #1FA9D6;
+}
+
+.isi[b-egzxxjdcui] {
+    font-size: 18px;
+    text-align: center;
+    margin: 30px;
+    padding: 20px;
+    color: black;
+}
+
+.buttons[b-egzxxjdcui] {
+    margin: 30px;
+    font-weight: 700;
+    border: 2px solid #EE4B5E;
+    text-decoration: none;
+    padding: 15px;
+    text-transform: uppercase;
+    color: #EE4B5E;
+    border-radius: 26px;
+    transition: all 0.2s ease-in-out;
+    display: inline-block;
+    .buttons:hover
+
+{
+    background-color: #EE4B5E;
+    color: white;
+    transition: all 0.2s ease-in-out;
+}
+
+}
+}

@@ -1,0 +1,31 @@
+﻿@using System.Net.Http
+@using TaskSe.Services.Interfaces.Auditoria
+@using TaskSe.Services.Interfaces.Utilidades
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.JSInterop
+@using TaskSe.Web
+@using TaskSe.Web.Shared
+@using TaskSe.Web.Helpers
+@using TaskSe.Model.Response
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using static TaskSe.Web.Helpers.IJSRuntimeExtension
+@using Radzen
+@using Radzen.Blazor
+@using TaskSe.Web.Utilidades
+@using TaskSe.Web.Authentication
+@using System.Security.Claims
+@using TaskSe.Web.Authorization;
+
+@inject IJSRuntime _jsRuntime
+@inject NavigationManager _navigationManager
+@inject AuthenticationStateProvider _authStateProvider
+@inject IWebHostEnvironment env
+@inject IAuditoriaService _auditoriaService
+@inject IConfiguration _config
+@inject IEncryptService _encryptService
+

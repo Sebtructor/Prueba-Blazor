@@ -1,0 +1,154 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@namespace TaskSe.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+
+    <base href="~/" />
+    <link rel="icon" type="image/png" href="favicon.ico">
+    <link href="manifest.json" rel="manifest" />
+    <link href="TaskSe.Web.styles.css" rel="stylesheet" />
+    <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
+
+    <link rel="stylesheet" href="loader/loader.css" />
+    <link rel="stylesheet" href="css/gridview.css" />
+    <link rel="stylesheet" href="toastr/toastr.min.css" />
+    <link rel="stylesheet" href="_content/Radzen.Blazor/css/default.css" />
+    <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+</head>
+<body data-sidebar="dark">
+    
+    <style>
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        .toast-warning {
+            background-color: rgb(248, 148, 6) !important;
+        }
+
+        .toast-success {
+            background-color: rgb(81, 163, 81) !important;
+        }
+
+        .toast-error {
+            background-color: rgb(189, 54, 47);
+        }
+
+        .grecaptcha-badge{
+            z-index: 10000;
+        }
+    </style>
+
+    <style>
+        #components-reconnect-modal {
+            display: none;
+            position: fixed;
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
+            left: 0px;
+            z-index: 1000;
+            overflow: hidden;
+            background-color: rgb(255, 255, 255);
+            opacity: 0.8;
+            text-align: center;
+            font-weight: bold;
+            z-index: 10000;
+        }
+
+            #components-reconnect-modal.components-reconnect-show {
+                display: block;
+            }
+
+                #components-reconnect-modal.components-reconnect-show div.reconnecting {
+                    display: block;
+                }
+
+        div.reconnecting {
+            display: none;
+        }
+
+        #components-reconnect-modal.components-reconnect-failed {
+            display: block;
+        }
+
+            #components-reconnect-modal.components-reconnect-failed div.failedToConnect {
+                display: block;
+            }
+
+        div.failedToConnect {
+            display: none;
+        }
+
+        #components-reconnect-modal.components-reconnect-rejected {
+            display: block;
+        }
+
+            #components-reconnect-modal.components-reconnect-rejected div.connectionRejected {
+                display: block;
+            }
+
+        div.connectionRejected {
+            display: none;
+        }
+
+        #components-reconnect-modal.components-reconnect-hide {
+            display: none;
+        }
+
+    </style>
+
+    <div id="components-reconnect-modal">
+        <div class="reconnecting">
+            Se ha perdido la conexión con el servidor, <input type="button" value="Recargar" onclick="ReloadPage()" />
+            <script>
+                function ReloadPage() {
+                    location.reload();
+                }
+            </script>
+        </div>
+        <div class="failedToConnect">
+            No ha sido posible conectarse con el servidor, <input type="button" value="Recargar" onclick="ReloadPage()" />
+            <script>
+                function ReloadPage() {
+                    location.reload();
+                }
+            </script>
+        </div>
+        <div class="connectionRejected">
+            No ha sido posible reconectar con el servidor <input type="button" value="Recargar Página" onclick="ReloadPage()" />
+            <script>
+                function ReloadPage() {
+                    location.reload();
+                }
+            </script>
+        </div>
+    </div>
+
+    @RenderBody()
+
+    <script src="js/common.js"></script>
+    <script src="_framework/blazor.server.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="toastr/toastr.min.js"></script>
+    <script src="SweetAlert/sweetalert2.all.min.js"></script>
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v652eace1692a40cfa3763df669d7439c1639079717194" integrity="sha512-Gi7xpJR8tSkrpF7aordPZQlW2DLtzUlZcumS8dMQjwDHEnw9I7ZLyiOj/6tZStRBGtGgN6ceN6cMH8z7etPGlw==" data-cf-beacon='{"rayId":"743a1ba67a55099e","token":"cd0b4b3a733644fc843ef0b185f98241","version":"2022.8.0","si":100}' crossorigin="anonymous"></script>
+    <script>
+        navigator.serviceWorker.register('/service-worker.js', { updateViaCache: 'none' });
+    </script>
+</body>
+</html>

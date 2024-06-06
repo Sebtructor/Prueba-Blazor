@@ -1,0 +1,143 @@
+﻿@attribute [PageInfo(id_modulo = "3")]
+
+@page "/Presentacion/Configuracion/Perfilamiento/Usuario/ConsultaUsuarios"
+
+@using TaskSe.Model.Models
+@using TaskSe.Services.Interfaces.Configuracion.Perfilamiento
+@using TaskSe.Model.Models.Configuracion.Perfilamiento
+
+@inject IUserService _usuarioService
+@inject IRolService _rolService
+@inject ILogger<ConsultaUsuarios> _logger
+
+<div class="row">
+    <div class="col-sm-6">
+        <div class="page-title-box">
+            <h4>Usuarios:</h4>
+            <ol class="breadcrumb m-0">
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Configuración</a></li>
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Perfilamiento</a></li>
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Usuarios</a></li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Usuarios</h4>
+                <p class="card-title-desc"></p>
+
+                <button type="button" class="btn btn-primary waves-effect waves-light" @onclick="DetalleUsuario">Agregar Usuario</button>
+                <button type="button" class="btn btn-primary waves-effect waves-light" @onclick=@(() => _navigationManager.NavigateTo("/Presentacion/Configuracion/Perfilamiento/Usuario/UserTracking"))>UserTracking</button>
+                <br />
+                <br />
+
+                @if (_isLoading)
+                {
+                    <_Loading></_Loading>
+                }
+                else
+                {
+                    <RadzenDataGridApp @ref="grid"  LogicalFilterOperator="LogicalFilterOperator.Or" AllowPaging="true" AllowFiltering="true" PageSize="10" AllowColumnResize="true"  Data="@usuarios" TItem="Usuario" IsLoading="@_isLoading">
+                        <Columns>
+                            <RadzenDataGridColumn TItem="Usuario" Title="" Width="40px" TextAlign="TextAlign.Center" Sortable="false" >
+                                <Template Context="data">
+                                    <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="edit" Class="m-1" Click=@(() => EditarUsuario(data.id_usuario)) />
+                                </Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="Usuario" Property="usuario" Title="Usuario"></RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="Usuario" Property="id_rol" Title="Rol" Type="typeof(IEnumerable<string>)"
+                                              FilterValue="@selectedRolIds" FilterOperator="FilterOperator.Contains" LogicalFilterOperator="LogicalFilterOperator.Or">
+                                <FilterTemplate>
+                                    <RadzenDropDown @bind-Value=@selectedRolIds Style="width:100%;"
+                                                Change=@OnselectedRolIdsChange Data="@(roles)" AllowClear="true" ValueProperty="id_rol" TextProperty="nombre_rol" Multiple="true" />
+                                </FilterTemplate>
+                                <Template Context="data">
+                                    @(roles.Where(r => r.id_rol == data.id_rol).FirstOrDefault()?.nombre_rol)
+                                </Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="Usuario" Property="estado" Title="Estado" Type="typeof(IEnumerable<string>)"
+                                              FilterValue="@selectedEstadoIds" FilterOperator="FilterOperator.Contains" LogicalFilterOperator="LogicalFilterOperator.Or">
+                                <FilterTemplate>
+                                    <RadzenDropDown @bind-Value=@selectedEstadoIds Style="width:100%;"
+                                                Change=@OnselectedEstadoIdsChange Data="@(estados)" AllowClear="true" ValueProperty="id_estado" TextProperty="descripcion" Multiple="true" />
+                                </FilterTemplate>
+                                <Template Context="data">
+                                    @(estados.Where(e => e.id_estado == data.estado).FirstOrDefault()?.descripcion)
+                                </Template>
+                            </RadzenDataGridColumn>
+
+
+                        </Columns>
+                    </RadzenDataGridApp>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    private bool _isLoading = true;
+
+    private IEnumerable<Usuario> usuarios;
+    private IEnumerable<Rol> roles;
+    private IEnumerable<Estado> estados = Estado.estados;
+    private IEnumerable<string> selectedEstadoIds;
+    private IEnumerable<string> selectedRolIds;
+    private RadzenDataGridApp<Usuario> grid;
+
+    private void EditarUsuario(string id_usuario)
+    {
+        _navigationManager.NavigateTo("/Presentacion/Configuracion/Perfilamiento/Usuario/ActualizarUsuario/" + id_usuario);
+    }
+
+    private void DetalleUsuario()
+    {
+        _navigationManager.NavigateTo("/Presentacion/Configuracion/Perfilamiento/Usuario/InsertarUsuario");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        try
+        {
+            if (firstRender)
+            {
+                await LoadData();
+                _isLoading = false;
+                StateHasChanged();
+            }
+        }
+        catch (Exception exe)
+        {
+            _logger.LogError(exe, $"Error al consultar usuarios");
+            await _jsRuntime.SweetAlertUsual("Error", "Error interno del servidor", TipoMensajeSweetAlert.error);
+        }
+
+    }
+
+    private async Task LoadData()
+    {
+        usuarios = await _usuarioService.getUsuarios();
+        roles = await _rolService.getRoles();
+    }
+
+    void OnselectedEstadoIdsChange(object value)
+    {
+        if (selectedEstadoIds != null && !selectedEstadoIds.Any())
+        {
+            selectedEstadoIds = null;
+        }
+    }
+
+    void OnselectedRolIdsChange(object value)
+    {
+        if (selectedRolIds != null && !selectedRolIds.Any())
+        {
+            selectedRolIds = null;
+        }
+    }
+}

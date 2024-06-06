@@ -1,0 +1,3 @@
+2024-06-05 20:29:33.524 -05:00 [INF] Starting up the application
+2024-06-05 20:29:35.289 -05:00 [INF] The service has been started...
+2024-06-05 20:29:35.292 -05:00 [INF] La próxima ejecución del worker se realizará dentro de 16224708 milisegundos en la fecha 6/06/2024 1:00:00 a. m.

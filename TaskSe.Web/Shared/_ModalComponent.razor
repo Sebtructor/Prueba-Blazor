@@ -1,0 +1,78 @@
+﻿@inject ILogger<_ModalComponent> _logger
+
+    <style>
+        @@media (min-width: 576px){
+            #@idModal .modal-dialog{
+                max-width: @(width)px !important;
+            }
+        }
+    </style>
+
+<div class="modal" id="@idModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@titulo</h5>
+                <button type="button" class="close" @onclick="cerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @if (_isLoading)
+                {
+                    <_Loading></_Loading>
+                }
+                else {
+                    @if (CuerpoModal != null)
+                    {
+                        @CuerpoModal
+                    }
+                    else
+                    {
+                        <span>Nada que mostrar</span>
+                    }
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" @onclick="eventoAceptar">Aceptar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    private string idModal = "";
+
+    [Parameter]
+    public bool _isLoading { get; set; } = true;
+
+    [Parameter]
+    public string titulo { get; set; } = "";
+
+    [Parameter]
+    public RenderFragment CuerpoModal { get; set; }
+
+    [Parameter]
+    public EventCallback eventoAceptar { get; set; }
+
+    [Parameter]
+    public int width { get; set; } = 1000;
+
+    protected override void OnInitialized()
+    {
+        idModal = "modal"+Guid.NewGuid().ToString("N");
+        base.OnInitialized();
+    }
+
+    public async Task abrirModal()
+    {
+        await _jsRuntime.InvokeVoidAsync("OpenModal", $"#{idModal}");
+    }
+
+    public async Task cerrarModal()
+    {
+        await _jsRuntime.InvokeVoidAsync("CloseModal", $"#{idModal}");
+    }
+}

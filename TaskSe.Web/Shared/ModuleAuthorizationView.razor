@@ -1,0 +1,119 @@
+﻿@using System.Reflection;
+@using TaskSe.Model.Models.Configuracion.Perfilamiento;
+@using TaskSe.Services.Interfaces.Configuracion.Perfilamiento;
+@using TaskSe.Web.Authentication;
+@using TaskSe.Web.Authorization;
+
+@inject AuthorizationService _authService
+@inject ILogger<PageAuthorizationView> _logger
+
+@if (_isLoading)
+{
+    <span>Autorizando...</span>
+}
+else
+{
+    @if (autorizado)
+    {
+        @Authorize
+    }
+    else
+    {
+        @NotAuthorize
+    }
+}
+
+
+
+@code {
+    private bool autorizado = false;
+    private bool _isLoading = true;
+
+    private IEnumerable<Modulo> modulosUsuario;
+
+    [Parameter]
+    public string id_modulo { get; set; }
+
+    [Parameter]
+    public RenderFragment Authorize { get; set; }
+
+    [Parameter]
+    public RenderFragment NotAuthorize { get; set; }
+
+    [CascadingParameter]
+    protected UserSession? userSession { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        try
+        {
+            if (firstRender)
+            {
+                if (string.IsNullOrEmpty(this.id_modulo))
+                {
+                    _logger.LogError($"Módulo no perfilado: No se definió id");
+                    autorizado = false;
+                    _isLoading = false;
+                    StateHasChanged();
+                    return;
+                }
+
+                await consultarModulos();
+
+                autorizado = tieneAccesoModulo(id_modulo);
+                _isLoading = false;
+                StateHasChanged();
+                return;
+            } 
+        }
+        catch (Exception exe)
+        {
+            _logger.LogError(exe, "Error al verificar autorización de módulo");
+            autorizado = false;
+            _isLoading = false;
+            StateHasChanged();
+            return;
+        }
+    }
+
+    private async Task consultarModulos()
+    {
+        try
+        {
+            string usuario = userSession.UserName;
+
+            if (!string.IsNullOrEmpty(usuario))
+            {
+                IEnumerable<Rol> roles = _authService.roles;
+                modulosUsuario = roles.FirstOrDefault(r => r.id_rol == userSession.Role).modulos;
+            }
+            else
+            {
+                modulosUsuario = new List<Modulo>();
+            }
+
+            if (modulosUsuario == null) modulosUsuario = new List<Modulo>();
+        }
+        catch (Exception exe)
+        {
+            _logger.LogError(exe, $"Error al consultar módulos para perfilamiento");
+            modulosUsuario = new List<Modulo>();
+        }
+    }
+
+    private bool tieneAccesoModulo(string id_modulo)
+    {
+        try
+        {
+            bool resultado = modulosUsuario.Any(m => m.id_modulo == id_modulo);
+
+            return resultado;
+        }
+        catch (Exception exe)
+        {
+
+        }
+
+        return false;
+    }
+}

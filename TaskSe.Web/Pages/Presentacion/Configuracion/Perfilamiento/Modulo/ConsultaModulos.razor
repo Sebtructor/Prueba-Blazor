@@ -1,0 +1,80 @@
+﻿@attribute [PageInfo(id_modulo = "5")]
+
+@page "/Presentacion/Configuracion/Perfilamiento/Modulo/ConsultaModulos"
+
+@using TaskSe.Model.Models.Configuracion.Perfilamiento
+@using TaskSe.Services.Interfaces.Configuracion.Perfilamiento
+
+@inject IModuloService _moduloService
+@inject ILogger<ConsultaModulos> _logger
+
+<div class="row">
+    <div class="col-sm-6">
+        <div class="page-title-box">
+            <h4>Módulos:</h4>
+            <ol class="breadcrumb m-0">
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Configuración</a></li>
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Perfilamiento</a></li>
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Módulos</a></li>
+
+            </ol>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Módulos</h4>
+                <p class="card-title-desc"></p>
+                @if (_isLoading)
+                {
+                    <_Loading></_Loading>
+                }
+                else
+                {
+                    <RadzenDataGridApp     LogicalFilterOperator="LogicalFilterOperator.Or" AllowPaging="true" AllowFiltering="true" 
+                            PageSize="10" AllowColumnResize="true"  Data="@modulos" TItem="Modulo"  IsLoading="@_isLoading">
+                        <Columns>
+                            <RadzenDataGridColumn TItem="Modulo" Property="nombre_modulo" Title="Nombre"></RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="Modulo" Property="tipo_modulo" Title="Tipo de Módulo"></RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="Modulo" Property="nivel" Title="Nivel"></RadzenDataGridColumn>
+
+                        </Columns>
+                    </RadzenDataGridApp>
+                }
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool _isLoading = true;
+
+    IEnumerable<Modulo> modulos;
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        try{
+            if (firstRender)
+            {
+                await LoadData();
+                _isLoading = false;
+                StateHasChanged();
+            }
+        }
+        catch(Exception exe){
+            _logger.LogError(exe, "Error al consultar módulos");
+            await _jsRuntime.SweetAlertUsual("Error", "Error interno del servidor", TipoMensajeSweetAlert.error);
+        }
+        
+    }
+
+    private async Task LoadData(){
+        modulos = await _moduloService.getModulos();
+    }
+}

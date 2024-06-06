@@ -1,0 +1,141 @@
+﻿@page "/TFALogin/{nombre_usuario}"
+
+@layout OTPLayout
+
+@using TaskSe.Model.DTO;
+@using TaskSe.Services.Interfaces.Configuracion.Perfilamiento;
+@using TaskSe.Web.Services;
+@using TaskSe.Web.Shared;
+@using TaskSe.Model.Models.Configuracion.Perfilamiento
+@using Microsoft.AspNetCore.Components.Server.Circuits;
+@using TaskSe.Web;
+@using TaskSe.Web.Authentication;
+
+@inject IUserService _userService
+@inject ICircuitUserService _circuitUserServer
+@inject CircuitHandler BlazorCircuitHandler
+@inject ILogger<VerificacionOTPLogin> _logger
+
+<_OTPScreen otp_enviado=@otp_enviado enviando_otp=@_isLoading
+            otp_code=@otp_code
+            eventoReenviarOTP="RedirigirOTP"
+            eventoVerificarOTP="VerificarCodigoOTP"
+            mensaje="Ingresa el código que te indica tu aplicación autenticadora"
+            mensajeReenviar1=""
+            mensajeReenviar2="Ingresar vía OTP convencional"
+            >
+        </_OTPScreen>
+
+@code {
+    [Parameter]
+    public string nombre_usuario { get; set; } = string.Empty;
+
+    private bool otp_enviado = true;
+
+    private bool _isLoading = false;
+
+    private OTP_DTO otp_code = new OTP_DTO();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        try
+        {
+            if (firstRender)
+            {
+
+            }
+        }
+        catch (Exception exe)
+        {
+            _logger.LogError(exe, $"Error al generar OTP para usuario {nombre_usuario}");
+            await _jsRuntime.SweetAlertConfirmSuccess("Error", "Error al consultar los datos del usuario", TipoMensajeSweetAlert.error);
+            _navigationManager.NavigateTo("/", forceLoad: true);
+        }
+    }
+
+
+    private async Task RedirigirOTP()
+    {
+        try
+        {
+            _navigationManager.NavigateTo($"/OtpLogin/{nombre_usuario}", forceLoad: true);
+        }
+        catch (Exception exe)
+        {
+            _logger.LogError(exe, $"Error al generar OTP de usuario");
+            await _jsRuntime.SweetAlertUsual("Error", "Error al consultar los datos del cliente", TipoMensajeSweetAlert.error);
+
+            _isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task VerificarCodigoOTP()
+    {
+        try
+        {
+            await _jsRuntime.SweetAlertLoading("Procesando", "Procesando solicitud");
+
+            Dictionary<string, string> parametros = _encryptService.desencriptarParametros(nombre_usuario);
+
+            string usuario = parametros["usuario"];
+            string id_auditoria = parametros["idauditorialogin"];
+            bool rememberMe = Convert.ToBoolean(parametros["rememberme"]);
+
+            var remoteIpAddress = await _jsRuntime.GetIpAddress();
+
+            string OTPCliente = otp_code.C1 +
+                                otp_code.C2 +
+                                otp_code.C3 +
+                                otp_code.C4 +
+                                otp_code.C5 +
+                                otp_code.C6
+                                ;
+
+            ResponseDTO respuesta = await _userService.validarTOTP2FA(usuario, remoteIpAddress, OTPCliente);
+
+            if (respuesta.estado.Equals("OK"))
+            {
+                Usuario user = await _userService.getUsuarioByUser(usuario);
+
+                //Session
+                UserSession session = new UserSession
+                    {
+                        UserName = user.usuario,
+                        RememberMe = rememberMe,
+                        Id = user.id_usuario,
+                        Role = user.id_rol,
+                        Ip = remoteIpAddress,
+                        last_login = DateTime.Now,
+                        hash_password = user.clave,
+                        id_auditoria_login = id_auditoria
+                    };
+
+                //Authentication Provider
+                var customAuthStateProvider = (CustomAuthenticationStateProvider)_authStateProvider;
+                await customAuthStateProvider.UpdateAuthenticationState(session);
+
+
+                _logger.LogInformation($"Login exitoso para usuario {user.usuario}");
+
+                CircuitHandlerService handler = (CircuitHandlerService)BlazorCircuitHandler;
+                _circuitUserServer.Connect(handler.CirtuidId, session);
+
+                await _jsRuntime.SweetAlertConfirmSuccess("Correcto", "Código validado correctamente", TipoMensajeSweetAlert.success);
+                _navigationManager.NavigateTo("/Home", forceLoad: true);
+            }
+            else
+            {
+                await _jsRuntime.SweetAlertUsual("Error", respuesta.descripcion, TipoMensajeSweetAlert.error);
+            }
+        }
+        catch (Exception exe)
+        {
+            _logger.LogError(exe, $"Error al validar OTP Login");
+            await _jsRuntime.SweetAlertUsual("Error", "Error al consultar los datos del usuario", TipoMensajeSweetAlert.error);
+
+            _isLoading = false;
+            StateHasChanged();
+        }
+    }
+}

@@ -1,0 +1,54 @@
+2024-05-25 20:33:42.515 -05:00 [INF] Starting up the application
+2024-05-25 20:33:49.091 -05:00 [INF] The service has been started...
+2024-05-25 20:33:49.099 -05:00 [INF] La próxima ejecución del worker se realizará dentro de 15970901 milisegundos en la fecha 26/05/2024 1:00:00 a. m.
+2024-05-25 20:33:50.370 -05:00 [WRN] Failed to determine the https port for redirect.
+2024-05-25 20:49:34.634 -05:00 [INF] Se procesa desconexión DXjTcWMAoCue69z-lvxRvwwvNcbvEj9elqE47zwJd2Q
+2024-05-25 20:50:17.157 -05:00 [INF] Se procesa desconexión Cxruq17rl6CZUmTa1C4vwBXbNKkXPx2PiA76xc_ojDM
+2024-05-25 20:50:32.540 -05:00 [ERR] Error al procesar clientinfo
+System.Data.SqlClient.SqlException (0x80131904): A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: SQL Network Interfaces, error: 26 - Error Locating Server/Instance Specified)
+   at System.Data.SqlClient.SqlInternalConnectionTds..ctor(DbConnectionPoolIdentity identity, SqlConnectionString connectionOptions, SqlCredential credential, Object providerInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString userConnectionOptions, SessionData reconnectSessionData, Boolean applyTransientFaultHandling, String accessToken)
+   at System.Data.SqlClient.SqlConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionFactory.CreatePooledConnection(DbConnectionPool pool, DbConnection owningObject, DbConnectionOptions options, DbConnectionPoolKey poolKey, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionPool.CreateObject(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at System.Data.ProviderBase.DbConnectionPool.UserCreateRequest(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at System.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, UInt32 waitForMultipleObjectsTimeout, Boolean allowCreate, Boolean onlyOneCheckConnection, DbConnectionOptions userOptions, DbConnectionInternal& connection)
+   at System.Data.ProviderBase.DbConnectionPool.WaitForPendingOpen()
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryRowAsync[T](IDbConnection cnn, Row row, Type effectiveType, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 473
+   at TaskSe.Data.Repositories.Repositories.Configuracion.Perfilamiento.UserRepository.getUsuarioByUser(String usuario) in C:\Users\USUARIO\Downloads\Blazor\demoblazor\CapacitacionBlazor\TaskSe.Data\Repositories\Repositories\Configuracion\Perfilamiento\UserRepository.cs:line 116
+   at TaskSe.Services.Services.Configuracion.Perfilamiento.UserService.getUsuarioByUser(String usuario) in C:\Users\USUARIO\Downloads\Blazor\demoblazor\CapacitacionBlazor\TaskSe.Services\Services\Configuracion\Perfilamiento\UserService.cs:line 1216
+   at TaskSe.Web.Controllers.InfoController.getClientInfo(DatosClienteModel datosCliente)
+ClientConnectionId:00000000-0000-0000-0000-000000000000
+Error Number:-1,State:0,Class:20
+2024-05-25 21:06:17.111 -05:00 [ERR] Error al procesar clientinfo
+System.Data.SqlClient.SqlException (0x80131904): A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: SQL Network Interfaces, error: 26 - Error Locating Server/Instance Specified)
+   at System.Data.SqlClient.SqlInternalConnectionTds..ctor(DbConnectionPoolIdentity identity, SqlConnectionString connectionOptions, SqlCredential credential, Object providerInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString userConnectionOptions, SessionData reconnectSessionData, Boolean applyTransientFaultHandling, String accessToken)
+   at System.Data.SqlClient.SqlConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionFactory.CreatePooledConnection(DbConnectionPool pool, DbConnection owningObject, DbConnectionOptions options, DbConnectionPoolKey poolKey, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionPool.CreateObject(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at System.Data.ProviderBase.DbConnectionPool.UserCreateRequest(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at System.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, UInt32 waitForMultipleObjectsTimeout, Boolean allowCreate, Boolean onlyOneCheckConnection, DbConnectionOptions userOptions, DbConnectionInternal& connection)
+   at System.Data.ProviderBase.DbConnectionPool.WaitForPendingOpen()
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryRowAsync[T](IDbConnection cnn, Row row, Type effectiveType, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 473
+   at TaskSe.Data.Repositories.Repositories.Configuracion.Perfilamiento.UserRepository.getUsuarioByUser(String usuario) in C:\Users\USUARIO\Downloads\Blazor\demoblazor\CapacitacionBlazor\TaskSe.Data\Repositories\Repositories\Configuracion\Perfilamiento\UserRepository.cs:line 116
+   at TaskSe.Services.Services.Configuracion.Perfilamiento.UserService.getUsuarioByUser(String usuario) in C:\Users\USUARIO\Downloads\Blazor\demoblazor\CapacitacionBlazor\TaskSe.Services\Services\Configuracion\Perfilamiento\UserService.cs:line 1216
+   at TaskSe.Web.Controllers.InfoController.getClientInfo(DatosClienteModel datosCliente)
+ClientConnectionId:00000000-0000-0000-0000-000000000000
+Error Number:-1,State:0,Class:20
+2024-05-25 21:06:59.999 -05:00 [ERR] Error al procesar clientinfo
+System.Data.SqlClient.SqlException (0x80131904): A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: SQL Network Interfaces, error: 26 - Error Locating Server/Instance Specified)
+   at System.Data.SqlClient.SqlInternalConnectionTds..ctor(DbConnectionPoolIdentity identity, SqlConnectionString connectionOptions, SqlCredential credential, Object providerInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString userConnectionOptions, SessionData reconnectSessionData, Boolean applyTransientFaultHandling, String accessToken)
+   at System.Data.SqlClient.SqlConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionFactory.CreatePooledConnection(DbConnectionPool pool, DbConnection owningObject, DbConnectionOptions options, DbConnectionPoolKey poolKey, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionPool.CreateObject(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at System.Data.ProviderBase.DbConnectionPool.UserCreateRequest(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at System.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, UInt32 waitForMultipleObjectsTimeout, Boolean allowCreate, Boolean onlyOneCheckConnection, DbConnectionOptions userOptions, DbConnectionInternal& connection)
+   at System.Data.ProviderBase.DbConnectionPool.WaitForPendingOpen()
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryRowAsync[T](IDbConnection cnn, Row row, Type effectiveType, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 473
+   at TaskSe.Data.Repositories.Repositories.Configuracion.Perfilamiento.UserRepository.getUsuarioByUser(String usuario) in C:\Users\USUARIO\Downloads\Blazor\demoblazor\CapacitacionBlazor\TaskSe.Data\Repositories\Repositories\Configuracion\Perfilamiento\UserRepository.cs:line 116
+   at TaskSe.Services.Services.Configuracion.Perfilamiento.UserService.getUsuarioByUser(String usuario) in C:\Users\USUARIO\Downloads\Blazor\demoblazor\CapacitacionBlazor\TaskSe.Services\Services\Configuracion\Perfilamiento\UserService.cs:line 1216
+   at TaskSe.Web.Controllers.InfoController.getClientInfo(DatosClienteModel datosCliente)
+ClientConnectionId:00000000-0000-0000-0000-000000000000
+Error Number:-1,State:0,Class:20

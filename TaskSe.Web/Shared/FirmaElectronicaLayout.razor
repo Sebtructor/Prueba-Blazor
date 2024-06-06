@@ -1,0 +1,42 @@
+﻿@inherits LayoutComponentBase
+
+<link rel="stylesheet" media="all" href="assetsFirma\css\bootstrap.min.css">
+<link rel="stylesheet" media="all" href="assetsFirma\css\style.css">
+<link rel="stylesheet" media="all" href="assetsFirma\css\fontawesome-all.min.css">
+<link rel="stylesheet" media="all" href="assetsFirma\css\jquery-ui.css">
+<link rel="stylesheet" media="all" href="assetsFirma\css\fa-brands.min.css">
+<link rel="stylesheet" media="all" href="assetsFirma\css\fa-regular.min.css">
+<link rel="stylesheet" media="all" href="assetsFirma\css\fa-solid.min.css">
+<link rel="stylesheet" media="all" href="assetsFirma\css\style.css">
+<link rel="stylesheet" media="all" href="assetsFirma\css\css.css">
+
+<PageTitle>Firma Electrónica de Documento</PageTitle>
+
+<style>
+    body{
+        font-family: 'Poppins', sans-serif !important;
+    }
+</style>
+
+<header>
+    <nav class="navbar navbar-light" style="background-color:#003781">
+        <div class="container-fluid">
+            <a class="navbar-brand logo text-dark h2 mb-0" href="#" style="margin-left:25px">
+                <img src="images/logo-white.png" style="height:40px;width:170px">
+            </a>
+        </div>
+    </nav>
+</header>
+
+@Body
+    
+<div class="container-fluid">
+        
+    <div class="row">
+        <div class="col-md-12 text-center" style="color:#FFFFFF">Copyright © @Anio Excellentiam SE. Todos los derechos reservados.</div>
+    </div>
+</div>
+
+@code {
+    private string Anio = DateTime.Now.Year.ToString();
+}

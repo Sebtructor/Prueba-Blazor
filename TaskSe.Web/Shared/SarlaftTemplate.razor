@@ -1,0 +1,71 @@
+﻿@inherits LayoutComponentBase
+
+@inject ILogger<SarlaftTemplate> _logger
+
+<link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+<link rel="stylesheet" href="assetsFormulario/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="assetsFormulario/tempusdominus/css/tempusdominus-bootstrap-4.css">
+<link rel="stylesheet" href="assetsFormulario/fontawesome-free-5.9.0-web/css/all.css">
+<link rel="stylesheet" href="assetsFormulario/core.css">
+<link rel="stylesheet" href="assetsFormulario/vidagrupo.css">
+
+<_LoadingSpinner></_LoadingSpinner>
+
+<style>
+    @@media (max-width: 767px){
+        .container-form-check {
+            flex-direction: column;
+        }
+
+        .elemento {
+            border: solid 2px !important;
+            padding: 20px !important;
+            border-radius: 25px !important;
+            margin-top: 20px !important;
+        }
+    }
+
+
+    body {
+        font-family: 'Poppins', sans-serif !important;
+    }
+
+    .descripcionPep{
+        text-align: justify;
+        padding-left: 20px;
+        padding-right: 20px;
+        font-size: 15px;
+        margin-top: 20px;
+    }
+
+    .elemento {
+        border: solid 2px;
+        padding: 2%;
+        border-radius: 25px;
+        margin-top: 20px;
+    }
+
+</style>
+
+@Body
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firsRender)
+    {
+        try
+        {
+            if (firsRender)
+            {
+                await _jsRuntime.InvokeVoidAsync("loadScript", "../assetsFormulario/vendors/base/vendor.bundle.base.js");
+            
+                //Loader
+                await _jsRuntime.InvokeVoidAsync("agregarClase", ".loaderOverlay", "inactive");
+            }  
+
+        }
+        catch (Exception exe)
+        {
+            _logger.LogError(exe, $"Error al cargar Sarlaft Template");
+        }
+    }
+}

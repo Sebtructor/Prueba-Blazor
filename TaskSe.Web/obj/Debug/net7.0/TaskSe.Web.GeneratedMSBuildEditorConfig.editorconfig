@@ -1,0 +1,155 @@
+is_global = true
+build_property.TargetFramework = net7.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = TaskSe.Web
+build_property.RootNamespace = TaskSe.Web
+build_property.ProjectDir = C:\Users\USUARIO\Downloads\Blazor\demoblazor\CapacitacionBlazor\TaskSe.Web\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 7.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\USUARIO\Downloads\Blazor\demoblazor\CapacitacionBlazor\TaskSe.Web
+build_property._RazorSourceGeneratorDebug = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/App.razor]
+build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Pages/CambioContraseña.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2FtYmlvQ29udHJhc2XDsWEucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Pages/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW4ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Pages/Presentacion/Configuracion/Parametrizacion/ConsultaPGeneral.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJlc2VudGFjaW9uXENvbmZpZ3VyYWNpb25cUGFyYW1ldHJpemFjaW9uXENvbnN1bHRhUEdlbmVyYWwucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Pages/Presentacion/Configuracion/Parametrizacion/DetallePGeneral.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJlc2VudGFjaW9uXENvbmZpZ3VyYWNpb25cUGFyYW1ldHJpemFjaW9uXERldGFsbGVQR2VuZXJhbC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Pages/Presentacion/Configuracion/Perfilamiento/Modulo/ConsultaModulos.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJlc2VudGFjaW9uXENvbmZpZ3VyYWNpb25cUGVyZmlsYW1pZW50b1xNb2R1bG9cQ29uc3VsdGFNb2R1bG9zLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Pages/Presentacion/Configuracion/Perfilamiento/Rol/ConsultaRoles.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJlc2VudGFjaW9uXENvbmZpZ3VyYWNpb25cUGVyZmlsYW1pZW50b1xSb2xcQ29uc3VsdGFSb2xlcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Pages/Presentacion/Configuracion/Perfilamiento/Rol/DetalleRol.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJlc2VudGFjaW9uXENvbmZpZ3VyYWNpb25cUGVyZmlsYW1pZW50b1xSb2xcRGV0YWxsZVJvbC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Pages/Presentacion/Configuracion/Perfilamiento/Usuario/ConsultaUsuarios.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJlc2VudGFjaW9uXENvbmZpZ3VyYWNpb25cUGVyZmlsYW1pZW50b1xVc3VhcmlvXENvbnN1bHRhVXN1YXJpb3MucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Pages/Presentacion/Configuracion/Perfilamiento/Usuario/DetalleUsuario.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJlc2VudGFjaW9uXENvbmZpZ3VyYWNpb25cUGVyZmlsYW1pZW50b1xVc3VhcmlvXERldGFsbGVVc3VhcmlvLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Pages/Presentacion/Configuracion/Perfilamiento/Usuario/UserTracking.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJlc2VudGFjaW9uXENvbmZpZ3VyYWNpb25cUGVyZmlsYW1pZW50b1xVc3VhcmlvXFVzZXJUcmFja2luZy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Pages/Presentacion/Configuracion/Perfilamiento/Usuario/Verificacion2FALogin.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJlc2VudGFjaW9uXENvbmZpZ3VyYWNpb25cUGVyZmlsYW1pZW50b1xVc3VhcmlvXFZlcmlmaWNhY2lvbjJGQUxvZ2luLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Pages/Presentacion/Configuracion/Perfilamiento/Usuario/VerificacionOTPLogin.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJlc2VudGFjaW9uXENvbmZpZ3VyYWNpb25cUGVyZmlsYW1pZW50b1xVc3VhcmlvXFZlcmlmaWNhY2lvbk9UUExvZ2luLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Pages/RecuperarContraseña.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVjdXBlcmFyQ29udHJhc2XDsWEucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Shared/FirmaElectronicaLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXEZpcm1hRWxlY3Ryb25pY2FMYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Shared/Layout404.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXExheW91dDQwNC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Shared/LoginTemplate.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXExvZ2luVGVtcGxhdGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Shared/ModuleAuthorizationView.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1vZHVsZUF1dGhvcml6YXRpb25WaWV3LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Shared/OTPLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE9UUExheW91dC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Shared/PageAuthorizationView.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFBhZ2VBdXRob3JpemF0aW9uVmlldy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Shared/SarlaftTemplate.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFNhcmxhZnRUZW1wbGF0ZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Shared/_FirmaElectronica.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXF9GaXJtYUVsZWN0cm9uaWNhLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Shared/_Loading.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXF9Mb2FkaW5nLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Shared/_LoadingSpinner.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXF9Mb2FkaW5nU3Bpbm5lci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Shared/_ModalComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXF9Nb2RhbENvbXBvbmVudC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Shared/_OTPScreen.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXF9PVFBTY3JlZW4ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Shared/_Page404.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXF9QYWdlNDA0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Shared/_ParametroDetallado.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXF9QYXJhbWV0cm9EZXRhbGxhZG8ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Shared/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-l07uptolam
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Shared/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE5hdk1lbnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-64h7c4fgqv
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Shared/_Page403.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXF9QYWdlNDAzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-egzxxjdcui
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Pages/_Host.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX0hvc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/USUARIO/Downloads/Blazor/demoblazor/CapacitacionBlazor/TaskSe.Web/Pages/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX0xheW91dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 

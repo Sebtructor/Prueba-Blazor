@@ -1,0 +1,119 @@
+
+.vigilado {
+	position: absolute;
+	left: -13%;
+	bottom: 12%;
+	width: 20%;
+	transform: rotate(-90deg);
+}
+
+.footer {
+	font-size: .8em;
+}
+
+.formulario-sarlaft {
+	border: 2px solid #17549C;
+	padding: 2em;
+    background-color: #fff;
+    border-radius:10px;
+	position: relative;
+    -webkit-box-shadow: 0px 0px 9px 0px rgba(50,86,144,1);
+-moz-box-shadow: 0px 0px 9px 0px rgba(50,86,144,1);
+box-shadow: 0px 0px 9px 0px rgba(50,86,144,1);
+}
+
+.info {
+	background: #e1f4fc;
+	font-size: .8em;
+	text-align: left;
+	padding: .5em;
+	margin-top: .5em;
+}
+
+.accordion {
+	margin-top: 1em;
+}
+
+th:before{
+    font-family: 'Inconsolata', monospace !important;
+    margin-right: 5px;
+}
+th:after{
+    font-family: 'Inconsolata', monospace !important;
+}
+
+
+.accordion .btn-link,
+.accordion .card-header {
+	background: #17549C;
+	border: none;
+	padding: 0.35em;
+	cursor: pointer;
+	color: #fff;
+}
+
+.accordion h1 {
+	color: white !important;
+	font-size: 1em;
+	text-align: left;
+    font-weight: 700;
+	
+}
+.accordion .card-header i {
+	position: absolute;
+	top: 7px;
+	right: 8px;
+}
+
+.container-form-check {
+	display: flex;
+}
+.form-check{
+	display: block;
+	margin-right: 2em;
+}
+
+.d-ib {}
+.d-ib label{display: inline-block;margin-right: 1em;}
+.d-ib .container-form-check {display: inline-block;}
+
+.head-tab {
+	background: #199dd7!important;
+	font-size: .8em;
+	text-align: center;
+	padding: .5em;
+	margin-top: .5em;	
+	border: 1px solid #199dd7;
+}
+.head-tab th {border: 1px solid #199dd7;}
+
+small {
+	font-size: .8em;
+	text-align: justify;
+	line-height:  1px;
+}
+
+.textos-autorizacion {
+	text-align: justify;
+	font-size: .9em;
+}
+.huella {
+	text-align: center;
+	margin: 0 auto;
+}
+
+.firma {
+	border-top: 2px solid #325691;
+	text-align: center;
+	margin-top: 120px;
+}
+
+
+@media (max-width:767px){
+
+}
+
+
+
+
+

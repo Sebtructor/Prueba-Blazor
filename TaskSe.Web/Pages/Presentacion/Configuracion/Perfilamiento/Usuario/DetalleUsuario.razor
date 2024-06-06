@@ -1,0 +1,262 @@
+﻿@attribute [PageInfo(id_modulo = "3")]
+
+@page "/Presentacion/Configuracion/Perfilamiento/Usuario/InsertarUsuario"
+@page "/Presentacion/Configuracion/Perfilamiento/Usuario/ActualizarUsuario/{idUsuario}"
+
+
+@using TaskSe.Services.Interfaces.Configuracion.Perfilamiento
+@using TaskSe.Model.Models.Configuracion.Perfilamiento
+@using TaskSe.Model.Models
+@using System.Text.RegularExpressions
+
+
+@inject IUserService _usuarioService
+@inject IRolService _rolService
+@inject ILogger<DetalleUsuario> _logger
+
+<div class="row">
+    <div class="col-sm-6">
+        <div class="page-title-box">
+            <h4>Información Usuario:</h4>
+            <ol class="breadcrumb m-0">
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Configuración</a></li>
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Perfilamiento</a></li>
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Usuario</a></li>
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Detalle Usuario</a></li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+@if (_isLoading)
+{
+    <_Loading></_Loading>
+}
+else
+{
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Información del Usuario</h4>
+                    <p class="card-title-desc"></p>
+                    <EditForm class="login100-form validate-form" Model="usuario" OnSubmit="InsertarUsuario">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Nombre de Usuario</label>
+                                    <input type="text" class="form-control" @bind-value="usuario.usuario" disabled="@readonlyUsuario" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Nombres</label>
+                                    <input type="text" class="form-control" @bind-value="usuario.nombres" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Apellidos</label>
+                                    <input type="text" class="form-control" @bind-value="usuario.apellidos" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Contraseña</label>
+                                    <input type="password" class="form-control" @bind-value="usuario.clave" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" @bind-value="usuario.email" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Email Secundario</label>
+                                    <input type="email" class="form-control" @bind-value="usuario.email_dos" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Celular</label>
+                                    <input type="number" class="form-control" @bind-value="usuario.celular" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Rol</label>
+                                    <RadzenDropDown AllowClear="false" TValue="string" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true" Class="form-control"
+                                                Placeholder="[Seleccionar]" @bind-value="usuario.id_rol" Data=@roles TextProperty="nombre_rol" ValueProperty="id_rol" Change=@(args => OnChange(args, "DropDown with placeholder")) />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Estado</label>
+                                    <RadzenDropDown AllowClear="false" TValue="string" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true" Class="form-control"
+                                                Placeholder="[Seleccionar]" @bind-value="usuario.estado" Data=@estados TextProperty="descripcion" ValueProperty="id_estado" Change=@(args => OnChange(args, "DropDown with placeholder")) />
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" type="submit">Aceptar</button>
+                        <button class="btn btn-secondary" type="button" @onclick=@(() => _navigationManager.NavigateTo("/Presentacion/Configuracion/Perfilamiento/Usuario/ConsultaUsuarios"))>Volver</button>
+                    </EditForm>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public string idUsuario { get; set; } = string.Empty;
+
+    private bool readonlyUsuario => idUsuario == null ? false : true;
+
+    private bool _isLoading = true;
+
+    private IEnumerable<Rol> roles;
+    private Usuario usuario;
+    private IEnumerable<Estado> estados = Estado.estados;
+
+    [CascadingParameter]
+    protected UserSession? userSession { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        try
+        {
+            if (firstRender)
+            {
+                await LoadData();
+                _isLoading = false;
+                StateHasChanged();
+            }
+        }
+        catch (Exception exe)
+        {
+            _logger.LogError(exe, $"Error al consultar información de usuario {idUsuario}");
+            await _jsRuntime.SweetAlertUsual("Error", "Error interno del servidor", TipoMensajeSweetAlert.error);
+
+        }
+    }
+
+    private async Task LoadData()
+    {
+        var consultaRoles = _rolService.getRoles();
+
+        if (!string.IsNullOrEmpty(idUsuario))
+        {
+            usuario = await _usuarioService.getUsuario(idUsuario);
+        }
+        else
+        {
+            usuario = new Usuario();
+        }
+
+        roles = await consultaRoles;
+    }
+
+    private async void InsertarUsuario()
+    {
+
+        try
+        {
+
+            if (!await valData()) return;
+
+            string regexPass = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*]).{8,}$";
+
+            if (!readonlyUsuario && !Regex.Match(usuario.clave, regexPass).Success)
+            {
+                await _jsRuntime.SweetAlertUsual("Error", "La contraseña debe tener al menos 8 caracteres, un minúscula, una mayúscula, un número y un caracter especial ", TipoMensajeSweetAlert.error);
+                return;
+            }
+
+            await _jsRuntime.SweetAlertLoading("Procesando", "Procesando solicitud");
+
+            var remoteIpAddress = await _jsRuntime.GetIpAddress();
+
+            string usuarioAccion = userSession.UserName;
+
+            if (await _usuarioService.insertarUsuario(usuario,remoteIpAddress,usuarioAccion))
+            {
+                bool resultado = await _jsRuntime.SweetAlertConfirmSuccess("Correcto", "Usuario insertado correctamente", TipoMensajeSweetAlert.success);
+
+                if (resultado)
+                {
+                    _navigationManager.NavigateTo("/Presentacion/Configuracion/Perfilamiento/Usuario/ConsultaUsuarios");
+                }
+            }
+            else
+            {
+                await _jsRuntime.SweetAlertUsual("Error", "Ocurrió un error al insertar el usuario", TipoMensajeSweetAlert.error);
+            }
+            }
+        catch (Exception exe)
+        {
+            _logger.LogError(exe, $"Error al insertar información de usuario {usuario.usuario}");
+            await _jsRuntime.SweetAlertUsual("Error", "Error interno del servidor", TipoMensajeSweetAlert.error);
+        }
+
+    }
+
+    private async Task<bool> valData()
+    {
+        if (string.IsNullOrEmpty(usuario.usuario))
+        {
+            await _jsRuntime.SweetAlertUsual("Error", "Debe diligenciar un nombre de usuario", TipoMensajeSweetAlert.error);
+            return false;
+        }
+
+        if (string.IsNullOrEmpty(usuario.nombres))
+        {
+            await _jsRuntime.SweetAlertUsual("Error", "Debe diligenciar los nombres del usuario", TipoMensajeSweetAlert.error);
+            return false;
+        }
+
+        if (string.IsNullOrEmpty(usuario.apellidos))
+        {
+            await _jsRuntime.SweetAlertUsual("Error", "Debe diligenciar los apellidos del usuario", TipoMensajeSweetAlert.error);
+            return false;
+        }
+
+        if (!readonlyUsuario && string.IsNullOrEmpty(usuario.clave))
+        {
+            await _jsRuntime.SweetAlertUsual("Error", "Debe diligenciar una clave para el usuario", TipoMensajeSweetAlert.error);
+            return false;
+        }
+
+        if (string.IsNullOrEmpty(usuario.email))
+        {
+            await _jsRuntime.SweetAlertUsual("Error", "Debe diligenciar el email principal del usuario", TipoMensajeSweetAlert.error);
+            return false;
+        }
+
+        if (string.IsNullOrEmpty(usuario.id_rol))
+        {
+            await _jsRuntime.SweetAlertUsual("Error", "Debe indicar el rol del usuario", TipoMensajeSweetAlert.error);
+            return false;
+        }
+
+        if (string.IsNullOrEmpty(usuario.estado))
+        {
+            await _jsRuntime.SweetAlertUsual("Error", "Debe indicar el estado del usuario", TipoMensajeSweetAlert.error);
+            return false;
+        }
+
+        return true;
+
+    }
+
+    void OnChange(object value, string name)
+    {
+        var str = value is IEnumerable<object> ? string.Join(", ", (IEnumerable<object>)value) : value;
+
+        //console.Log($"{name} value changed to {str}");
+    }
+}

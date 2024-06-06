@@ -1,0 +1,19 @@
+﻿@using TaskSe.Model.Models.Par;
+
+
+<tr>
+    <th scope="row">@consecutivo</th>
+    <td><input class="form-control" placeholder="Nombre" type="text" @bind-value="pDetallado.nombre_parametro_detallado" /></td>
+    <td style="text-align:center"> <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="delete" Class="m-1" Click="eventoEliminarPDetallado" /></td>
+</tr>
+
+@code {
+    [Parameter]
+    public ParametroDetallado pDetallado { get; set; } = new ParametroDetallado();
+
+    [Parameter]
+    public int consecutivo { get; set; } = 0;
+
+    [Parameter]
+    public EventCallback eventoEliminarPDetallado { get; set; }
+}

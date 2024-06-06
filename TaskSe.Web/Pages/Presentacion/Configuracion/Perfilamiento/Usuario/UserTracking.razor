@@ -1,0 +1,236 @@
+﻿@attribute [PageInfo(id_modulo = "3")]
+
+@page "/Presentacion/Configuracion/Perfilamiento/Usuario/UserTracking"
+
+@using TaskSe.Services.Interfaces.Configuracion.Perfilamiento;
+@using TaskSe.Web.Services;
+@using Microsoft.AspNetCore.Components.Server.Circuits;
+@using TaskSe.Model.Models.Configuracion.Perfilamiento
+
+@inject ICircuitUserService UserService
+@inject CircuitHandler BlazorCircuitHandler
+@inject IUserService _usuarioService
+@inject IRolService _rolService
+@inject ILogger<UserTracking> _logger
+
+<style>
+    .boxscroll {
+        height: auto !important;
+        max-height: 510px !important;
+        overflow: auto !important;
+    }
+</style>
+
+@if (_isLoading)
+{
+    <_Loading></_Loading>
+}
+else
+{
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="btn-group float-right">
+                    <ol class="breadcrumb hide-phone p-0 m-0">
+                        <li class="breadcrumb-item"><a href="#">UserTracking</a></li>
+                        <li class="breadcrumb-item active">Usuarios</li>
+                    </ol>
+                </div>
+                <h4 class="page-title"><b>Usuario actual:</b> @userSession.UserName - @MyCircuitMessage</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="header-title pb-3 mt-0">Usuarios Conectados: @usuariosConectados.ToList().Count</h5>
+                    <h5 class="header-title pb-3 mt-0">Conexiones abiertas: @usuarios.Count</h5>
+                    <div class="table-responsive boxscroll" style="overflow: hidden; outline: none;" tabindex="5000">
+
+                        <table class="table mb-0">
+                            <tbody>
+                                @if (usuariosConectados.ToList().Count == 0)
+                                {
+                                    <p>No hay servidores conectados</p>
+                                }
+
+                                @foreach (var usuario in usuariosConectados)
+                                {
+                                    <tr>
+                                        <td class="border-top-0">
+                                            <div class="media">
+                                                <img src="assetsMainSite/images/userIcon.png" style="width:10%" alt="" class="thumb-md rounded-circle">
+                                                <div class="media-body ml-2" style="overflow:auto">
+                                                    <p class="mb-0">
+                                                        @usuario.UserName
+                                                        <br>
+                                                        <span class="font-12 text-muted"><b>Id: </b>@usuarios.FirstOrDefault(u => u.Value.usuario.UserName == usuario.UserName).Key</span>
+                                                        <br>
+                                                        <span class="font-12 text-muted"><b>Ip: </b>@usuario.Ip</span>
+                                                        <span class="badge badge-soft-success">Conectado</span>
+                                                    </p>
+
+                                                    <span class="font-12 text-muted"><b>Rol: </b>@(roles.FirstOrDefault(r => r.id_rol == usuario.Role)?.nombre_rol)</span>
+                                                    <span class="font-12 text-muted"><b>Conexiones: </b>@(usuarios.Where(u => u.Value.usuario.UserName == usuario.UserName).ToList().Count)</span>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="header-title pb-3 mt-0">Usuarios Desconectados: @usuariosDesconectados.ToList().Count</h5>
+                    <div class="table-responsive boxscroll" style="overflow: hidden; outline: none;" tabindex="5000">
+
+                        <table class="table mb-0">
+                            <tbody>
+                                @if (usuariosDesconectados.ToList().Count == 0)
+                                {
+                                    <p>No hay servidores desconectados</p>
+                                }
+
+                                @foreach (var usuario in usuariosDesconectados)
+                                {
+                                    <tr>
+                                        <td class="border-top-0">
+                                            <div class="media">
+                                                <img src="assetsMainSite/images/desconecteduser.png" style="width:10%" alt="" class="thumb-md rounded-circle">
+                                                <div class="media-body ml-2" style="overflow:auto">
+                                                    <p class="mb-0">
+                                                        @usuario.UserName
+                                                        <br>
+                                                        <span class="badge badge-soft-danger">Desconectado</span>
+                                                    </p>
+
+                                                    <span class="font-12 text-muted"><b>Rol: </b>@(roles.FirstOrDefault(r => r.id_rol == usuario.Role)?.nombre_rol)</span>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+}
+
+@code {
+    private bool _isLoading = true;
+
+    [CascadingParameter]
+    protected UserSession? userSession { get; set; }
+
+    public string MyCircuitMessage = "";
+    public string UserRemovedMessage = "";
+
+    private List<KeyValuePair<string, CircuitUser>> usuarios;
+
+    private IEnumerable<Usuario> usuariosRegistrados;
+    private IEnumerable<UserSession> usuariosConectados;
+    private IEnumerable<UserSession> usuariosDesconectados;
+
+    private IEnumerable<Rol> roles;
+
+    CircuitHandlerService handler;
+
+    protected override void OnInitialized()
+    {
+        var a = UserService.Circuits.ToList();
+
+        handler = (CircuitHandlerService)BlazorCircuitHandler;
+        MyCircuitMessage = $"ID : {handler.CirtuidId}";
+
+        UserService.UserDisconnected += UserService_UserDisconnected;
+        UserService.UserConnected += UserService_UserConnected;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        try
+        {
+            if (firstRender)
+            {
+                await LoadUsuarios();
+            }
+        }
+        catch(Exception exe)
+        {
+            _logger.LogError(exe, "Error al consultar información de UserTracking");
+            await _jsRuntime.SweetAlertUsual("Error", "Error al consultar información", TipoMensajeSweetAlert.error);
+        }
+    }
+
+    private async Task LoadUsuarios()
+    {
+        _isLoading = true;
+        StateHasChanged();
+
+        usuarios = UserService.Circuits.ToList();
+        usuariosRegistrados = await _usuarioService.getUsuarios();
+
+        usuariosConectados = usuarios.Select(x => x.Value.usuario);
+        usuariosDesconectados = usuariosRegistrados.Where(ur => usuarios.Any(uc => uc.Value.usuario.UserName != ur.usuario)).Select(x => new UserSession(){UserName = x.usuario, Role =x.id_rol});
+
+        usuariosConectados = usuariosConectados.GroupBy(x => new { x.Ip, x.UserName}).Select(g => g.First()).ToList();
+
+        usuariosConectados = usuariosConectados.OrderBy(x => x.UserName);
+
+        roles = await _rolService.getRoles();
+
+        _isLoading = false;
+        StateHasChanged();
+    }
+
+    private async void UserService_UserConnected(object? sender, UserEventArgs e)
+    {
+        try
+        {
+            await InvokeAsync(LoadUsuarios);
+            await _jsRuntime.InvokeVoidAsync("successToastr", $"El usuario {e.usuario.UserName} se ha conectado");
+            await InvokeAsync(StateHasChanged);
+        }
+        catch(Exception exe)
+        {
+            
+        }
+    }
+
+    private async void UserService_UserDisconnected(object? sender, UserEventArgs e)
+    {
+        try
+        {
+            await InvokeAsync(LoadUsuarios);
+            await _jsRuntime.InvokeVoidAsync("warningToastr", $"El usuario {e.usuario.UserName} se ha desconectado");
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception exe)
+        {
+
+        }
+    }
+
+
+    public void Dispose()
+    {
+        UserService.UserDisconnected -= UserService_UserDisconnected;
+        UserService.UserConnected -= UserService_UserConnected;
+    }
+}
